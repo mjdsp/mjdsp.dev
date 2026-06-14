@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mj Despi | Developer & Designer</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="scroll-progress"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav class="navbar" id="navbar">
+    <a href="#hero" class="navbar__logo">Mj<span class="logo-dot">.</span></a>
+
+    <ul class="navbar__links">
+      <li><a href="#about"    class="nav-link">About</a></li>
+      <li><a href="#skills"   class="nav-link">Skills</a></li>
+      <li><a href="#projects" class="nav-link">Work</a></li>
+      <li><a href="#contact"  class="nav-link">Contact</a></li>
+    </ul>
+
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <div class="drawer" id="drawer">
+      <ul>
+        <li><a href="#about"    class="drawer-link">About</a></li>
+        <li><a href="#skills"   class="drawer-link">Skills</a></li>
+        <li><a href="#projects" class="drawer-link">Work</a></li>
+        <li><a href="#contact"  class="drawer-link">Contact</a></li>
+      </ul>
+    </div>
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+  </nav>
+
+  <!-- ============================================================
+       HERO — two-column: left = name/CTA, right = word cloud
+  ============================================================ -->
+  <section id="hero" class="hero">
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="hero__layout">
+
+      <!-- LEFT — identity -->
+      <div class="hero__content">
+        <span class="section-label hero__eyebrow">
+          <span class="eyebrow-dot"></span>
+          Available for work
+        </span>
+
+        <h1 class="hero__name">
+          <span class="name-first">Mj</span><br>
+          <span class="name-last">Despi</span>
+        </h1>
+
+        <p class="hero__tagline">
+          I build things. I break them on purpose.<br>Then I make them look good.
+        </p>
+
+        <div class="hero__actions">
+          <a href="#projects" class="btn btn-primary">View My Work</a>
+          <a href="Despi_CV.pdf" download class="btn btn-ghost">
+            Download CV
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1v8M3.5 6l3.5 4 3.5-4M2 12h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT — word cloud canvas -->
+      <div class="hero__wordcloud-wrap">
+        <canvas id="wordcloud-canvas"></canvas>
+      </div>
+
+    </div>
+
+    <div class="hero__scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+  ============================================================ -->
+  <section id="about" class="about">
+    <div class="about__inner">
+
+      <div class="about__image reveal">
+        <div class="image-frame">
+          <div class="image-placeholder">
+            <div class="placeholder-shape outer"></div>
+            <div class="placeholder-shape inner"></div>
+            <span class="placeholder-initials">MD</span>
+          </div>
+        </div>
+        <div class="image-accent"></div>
+      </div>
+
+      <div class="about__text">
+        <span class="section-label reveal">Who's behind the screen</span>
+
+        <h2 class="about__heading reveal reveal-delay-1">
+          Not a full-stack dev.<br>
+          <em>A full-picture one.</em>
+        </h2>
+
+        <p class="about__bio reveal reveal-delay-2">
+          I'm a multi-disciplinary tech person who doesn't stay in one lane.
+          I design interfaces, architect backends, automate what should be automated,
+          and QA test everything until it breaks, because it will.
+          I like working at the edges of where things connect.
+        </p>
+
+        <div class="about__roles reveal reveal-delay-3" id="roles-container"></div>
+
+        <div class="about__stats reveal reveal-delay-4">
+          <div class="stat">
+            <span class="stat-num">2+</span>
+            <span class="stat-label">Years developing</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">4</span>
+            <span class="stat-label">Projects</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num">∞</span>
+            <span class="stat-label">Tabs open right now</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS — CONSTELLATION
+  ============================================================ -->
+  <section id="skills" class="skills">
+    <div class="skills__header">
+      <span class="section-label" style="color: var(--sand); opacity: 0.7;">The stack I live in</span>
+      <h2 class="skills__heading reveal">
+        Every skill,<br><em>mapped to its star.</em>
+      </h2>
+    </div>
+
+    <div class="skills__map">
+      <div class="skills__legend" id="skills-legend"></div>
+      <div class="skills__svg-wrap">
+        <svg id="constellation" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="skill-tooltip" id="skill-tooltip"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECTS
+  ============================================================ -->
+  <section id="projects" class="projects">
+    <div class="projects__inner">
+      <div class="projects__header">
+        <span class="section-label reveal">Selected work</span>
+        <h2 class="projects__heading reveal reveal-delay-1">
+          Things I've<br><em>actually shipped.</em>
+        </h2>
+      </div>
+      <div class="projects__grid" id="projects-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+  ============================================================ -->
+  <section id="contact" class="contact">
+    <div class="contact__inner">
+      <span class="section-label reveal" style="color: var(--sand); opacity: 0.6;">Let's build something</span>
+
+      <h2 class="contact__heading reveal reveal-delay-1">
+        Got a project in mind?<br>
+        <em>I'm usually a message away.</em>
+      </h2>
+
+      <p class="contact__sub reveal reveal-delay-2">
+        Open to consultant, contract, and full-time opportunities.
+        If you've got something interesting, let's talk.
+      </p>
+
+      <div class="contact__links" id="contact-links"></div>
+
+      <footer class="contact__footer reveal">
+        <span class="footer-name">Mj Despi</span>
+        <span class="footer-year">© <span id="year"></span></span>
+      </footer>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EASTER EGG
+  ============================================================ -->
+  <div class="easter-egg" id="easter-egg">
+    <div class="easter-egg__box">
+      <div class="easter-egg__emoji">🍪</div>
+      <h3 class="easter-egg__title">You found the secret.</h3>
+      <p class="easter-egg__text">
+        ↑ ↑ ↓ ↓ ← → ← → B A<br>
+        Most people don't make it this far.<br>
+        Here's a cookie. You've earned it.
+      </p>
+      <button class="easter-egg__close" id="easter-egg-close">Close & keep exploring</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="wordcloud.js"></script>
+</body>
+</html>
