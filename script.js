@@ -294,6 +294,15 @@ function initHeroCanvas() {
 
   function draw() {
     const w = canvas.width, h = canvas.height;
+
+    // A hidden or zero-width viewport makes createImageData throw below, and
+    // this runs inside DOMContentLoaded — an uncaught throw here kills every
+    // init that follows. Skip the frame and pick it up on the next one.
+    if (!w || !h) {
+      animId = requestAnimationFrame(draw);
+      return;
+    }
+
     ctx.clearRect(0, 0, w, h);
 
     // Slowly drifting warm radial glow
