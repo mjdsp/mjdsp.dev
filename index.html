@@ -17,9 +17,9 @@
   <div class="cursor-dot" id="cursor-dot"></div>
   <div class="cursor-ring" id="cursor-ring"></div>
 
-
-  <!--navigation--> 
-
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
   <nav class="navbar" id="navbar">
     <a href="#hero" class="navbar__logo">Mj<span class="logo-dot">.</span></a>
 
@@ -45,7 +45,9 @@
     <div class="drawer-overlay" id="drawer-overlay"></div>
   </nav>
 
-  <!--Hero-->
+  <!-- ============================================================
+       HERO — two-column: left = name/CTA, right = word cloud
+  ============================================================ -->
   <section id="hero" class="hero">
     <canvas id="hero-canvas"></canvas>
 
@@ -91,7 +93,9 @@
     </div>
   </section>
 
-  <!--about-->
+  <!-- ============================================================
+       ABOUT
+  ============================================================ -->
   <section id="about" class="about">
     <div class="about__inner">
 
@@ -129,7 +133,7 @@
             <span class="stat-label">Years developing</span>
           </div>
           <div class="stat">
-            <span class="stat-num">7</span>
+            <span class="stat-num">4</span>
             <span class="stat-label">Projects</span>
           </div>
           <div class="stat">
@@ -142,7 +146,9 @@
     </div>
   </section>
 
-  <!--skills-->
+  <!-- ============================================================
+       SKILLS — CONSTELLATION
+  ============================================================ -->
   <section id="skills" class="skills">
     <div class="skills__header">
       <span class="section-label" style="color: var(--sand); opacity: 0.7;">The stack I live in</span>
@@ -160,8 +166,40 @@
     </div>
   </section>
 
-  <!--projects-->
-  
+  <!-- ============================================================
+       TECH STACK — ink specimen plate (cream sheet, brown marks)
+  ============================================================ -->
+  <section id="stack" class="stack">
+    <div class="stack__inner">
+
+      <div class="stack__header">
+        <span class="section-label reveal">Plate No. 01 — the tools themselves</span>
+        <h2 class="stack__heading reveal reveal-delay-1">
+          Pressed in ink,<br><em>not just listed.</em>
+        </h2>
+        <p class="stack__note reveal reveal-delay-2">
+          The constellation above is how I think about the work.
+          This is what's actually open on my machine. Hover a cell to ink it.
+        </p>
+      </div>
+
+      <div class="stack__key reveal reveal-delay-2" id="stack-key"></div>
+
+      <div class="stack__sheet reveal reveal-delay-3">
+        <div class="stack__plate" id="stack-plate"></div>
+      </div>
+
+      <div class="stack__caption reveal">
+        <span id="stack-count"></span>
+        <span>Monochrome · one plate · no filler</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECTS
+  ============================================================ -->
   <section id="projects" class="projects">
     <div class="projects__inner">
       <div class="projects__header">
@@ -174,8 +212,9 @@
     </div>
   </section>
 
-  <!--contacts-->
-  
+  <!-- ============================================================
+       CONTACT
+  ============================================================ -->
   <section id="contact" class="contact">
     <div class="contact__inner">
       <span class="section-label reveal" style="color: var(--sand); opacity: 0.6;">Let's build something</span>
@@ -199,7 +238,9 @@
     </div>
   </section>
 
-  <!--easter egg-->
+  <!-- ============================================================
+       EASTER EGG
+  ============================================================ -->
   <div class="easter-egg" id="easter-egg">
     <div class="easter-egg__box">
       <div class="easter-egg__emoji">🍪</div>
@@ -213,6 +254,7 @@
     </div>
   </div>
 
+  <script src="logos.js"></script>
   <script src="script.js"></script>
   <script src="wordcloud.js"></script>
 </body>
