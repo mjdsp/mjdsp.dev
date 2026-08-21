@@ -108,6 +108,39 @@ const CONFIG = {
       ],
     },
   ],
+
+  // TODO: Replace with your tools — `logo` must match a key in logos.js.
+  // `family` must match one of the codes in techFamilies below.
+  techStack: [
+    { name: "HTML5",         logo: "html5",        family: "FE" },
+    { name: "CSS3",          logo: "css",          family: "FE" },
+    { name: "JavaScript",    logo: "javascript",   family: "FE" },
+    { name: "Bootstrap",     logo: "bootstrap",    family: "FE" },
+    { name: "PHP",           logo: "php",          family: "BE" },
+    { name: "MySQL",         logo: "mysql",        family: "BE" },
+    { name: "PostgreSQL",    logo: "postgresql",   family: "BE" },
+    { name: "Docker",        logo: "docker",       family: "BE" },
+    { name: "Figma",         logo: "figma",        family: "UI" },
+    { name: "Postman",       logo: "postman",      family: "QA" },
+    { name: "Playwright",    logo: "playwright",   family: "QA" },
+    { name: "GitHub",        logo: "github",       family: "OP" },
+    { name: "Hostinger",     logo: "hostinger",    family: "OP" },
+    { name: "n8n",           logo: "n8n",          family: "AI" },
+    { name: "OpenAI",        logo: "openai",       family: "AI" },
+    { name: "Claude",        logo: "claude",       family: "AI" },
+    { name: "Zapier",        logo: "zapier",       family: "AI" },
+    { name: "Google Sheets", logo: "googlesheets", family: "AI" },
+  ],
+
+  // Two-letter codes printed in the corner of every plate cell
+  techFamilies: [
+    { code: "FE", label: "Front-end" },
+    { code: "BE", label: "Back-end" },
+    { code: "UI", label: "Design" },
+    { code: "QA", label: "Testing" },
+    { code: "OP", label: "Ops" },
+    { code: "AI", label: "AI / Automation" },
+  ],
 };
 
 /* ============================================================
@@ -166,7 +199,7 @@ function initCursor() {
   const onLeave = () => { dot.classList.remove("hovering"); ring.classList.remove("hovering"); };
 
   function bindHoverables() {
-    document.querySelectorAll("a, button, .project-card, .star-group").forEach((el) => {
+    document.querySelectorAll("a, button, .project-card, .star-group, .stack-cell").forEach((el) => {
       el.removeEventListener("mouseenter", onEnter);
       el.removeEventListener("mouseleave", onLeave);
       el.addEventListener("mouseenter", onEnter);
@@ -189,6 +222,9 @@ function initNavbar() {
   const drawer   = document.getElementById("drawer");
   const overlay  = document.getElementById("drawer-overlay");
   const navLinks = document.querySelectorAll(".nav-link");
+
+  // Sections that have no nav link of their own borrow one
+  const NAV_ALIAS = { stack: "skills" };
 
   // Scroll → add scrolled class
   window.addEventListener("scroll", () => {
@@ -213,7 +249,8 @@ function initNavbar() {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         navLinks.forEach((l) => {
-          l.classList.toggle("active", l.getAttribute("href") === "#" + entry.target.id);
+          const id = NAV_ALIAS[entry.target.id] || entry.target.id;
+          l.classList.toggle("active", l.getAttribute("href") === "#" + id);
         });
       }
     });
@@ -428,6 +465,59 @@ function initConstellation() {
 }
 
 /* ============================================================
+   TECH STACK — ink specimen plate
+   Logo path data comes from logos.js; every mark is drawn with
+   currentColor so the cell's hover state recolours it for free.
+   ============================================================ */
+function initTechStack() {
+  const plate = document.getElementById("stack-plate");
+  const key   = document.getElementById("stack-key");
+  const count = document.getElementById("stack-count");
+  if (!plate || typeof TECH_LOGOS === "undefined") return;
+
+  // Legend for the two-letter family codes printed in each cell
+  CONFIG.techFamilies.forEach((fam) => {
+    const item = document.createElement("span");
+    item.className = "key-item";
+    item.innerHTML = `<span class="key-code">${fam.code}</span>${fam.label}`;
+    key.appendChild(item);
+  });
+
+  // Cells
+  CONFIG.techStack.forEach((tech, i) => {
+    const mark = TECH_LOGOS[tech.logo];
+    if (!mark) return; // unknown slug — skip it rather than print an empty cell
+
+    const cell = document.createElement("article");
+    cell.className = "stack-cell";
+    cell.style.setProperty("--d", (i * 45) + "ms"); // staggered "printing" order
+    cell.setAttribute("aria-label", tech.name);
+    cell.innerHTML = `
+      <span class="cell-body">
+        <span class="cell-index">${String(i + 1).padStart(2, "0")}</span>
+        <span class="cell-family">${tech.family}</span>
+        <span class="cell-mark">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">${mark}</svg>
+        </span>
+        <span class="cell-name">${tech.name}</span>
+      </span>`;
+    plate.appendChild(cell);
+  });
+
+  count.textContent =
+    plate.children.length + " marks · " + CONFIG.techFamilies.length + " families";
+
+  // Press the plate when it scrolls into view
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      plate.classList.add("inked");
+      observer.disconnect();
+    }
+  }, { threshold: 0.15 });
+  observer.observe(plate);
+}
+
+/* ============================================================
    PROJECTS — render cards from CONFIG
    ============================================================ */
 function initProjects() {
@@ -569,6 +659,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeroCanvas();
   initAbout();
   initConstellation();
+  initTechStack();
   initProjects();
   initContact();
   initReveal();   // run after projects/contact render their dynamic elements
