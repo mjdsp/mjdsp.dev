@@ -19,32 +19,46 @@ const CONFIG = {
     "AI Automation Specialist",
   ],
 
-  // TODO: Replace with your real projects
+  // Live prototypes hub — every project below opens a clickable front-end demo.
+  demoUrl: "demos.html",
+
   projects: [
     {
-  title: "Quizmetrix — Web-Based Learning & Assessment Platform",
-  description:
-    "A web-based study platform that helps students create, organize, and review learning materials through flashcards, quizzes, mock examinations, and AI-assisted study tools.",
-  tags: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "Bootstrap","AI Integration", "Hostinger"],
-},
-{
-  title: "UniShop — Campus Uniform Mobile App",
-  description:
-    "A mobile commerce application that allows students to browse available school uniforms, check stock availability, and pre-order items conveniently through their smartphones.",
-  tags: ["Android Studio", "XML", "Java", "UI/UX", "Mobile Development"],
-},
-{   
-  title: "ChronoSync — Room & Time Management System",
-  description:
-    "A web-based scheduling and facility management system designed to streamline room reservations, schedule coordination, and resource allocation within an organization.",
-  tags: ["HTML", "CSS", "JavaScript", "UI/UX"],
-},
+      title: "Manage My Money — Personal Finance Manager",
+      description:
+        "A personal finance app for tracking accounts, debts and everyday spending. It handles loans with real monthly interest and repayment plans, auto-posts recurring bills, and turns photographed receipts into itemised reimbursement claims with AI extraction. Monthly reports export to PDF.",
+      tags: ["Laravel 12", "Inertia", "React", "TypeScript", "Tailwind", "shadcn/ui", "MySQL", "Vite"],
+      demo: "money",
+      repo: "https://github.com/mjdsp/manage-my-money",
+    },
     {
-  title: "DocuFlow AI — Intelligent Document Processing Platform",
-  description:
-    "An AI-powered workflow automation platform that extracts, validates, categorizes, and stores information from uploaded documents. The system automates data entry, document analysis, and reporting through integrated workflows and AI-assisted processing.",
-  tags: ["n8n", "OpenAI", "Google Sheets", "Webhooks", "Hostinger"],
-},
+      title: "Quizmetrix — Web-Based Learning & Assessment Platform",
+      description:
+        "A web-based study platform that helps students create, organize, and review learning materials through flashcards, quizzes, mock examinations, and AI-assisted study tools.",
+      tags: ["HTML", "CSS", "JavaScript", "PHP", "MySQL", "Bootstrap", "AI Integration", "Hostinger"],
+      demo: "quiz",
+    },
+    {
+      title: "UniShop — Campus Uniform Mobile App",
+      description:
+        "A mobile commerce application that allows students to browse available school uniforms, check stock availability, and pre-order items conveniently through their smartphones.",
+      tags: ["Android Studio", "XML", "Java", "UI/UX", "Mobile Development"],
+      demo: "shop",
+    },
+    {
+      title: "ChronoSync — Room & Time Management System",
+      description:
+        "A web-based scheduling and facility management system designed to streamline room reservations, schedule coordination, and resource allocation within an organization.",
+      tags: ["HTML", "CSS", "JavaScript", "UI/UX"],
+      demo: "chrono",
+    },
+    {
+      title: "DocuFlow AI — Intelligent Document Processing Platform",
+      description:
+        "An AI-powered workflow automation platform that extracts, validates, categorizes, and stores information from uploaded documents. The system automates data entry, document analysis, and reporting through integrated workflows and AI-assisted processing.",
+      tags: ["n8n", "OpenAI", "Google Sheets", "Webhooks", "Hostinger"],
+      demo: "flow",
+    },
   ],
 
   // TODO: Replace with your skills — x/y are % positions on the SVG (0-100)
@@ -536,6 +550,25 @@ function initProjects() {
     const card = document.createElement("article");
     card.className = "project-card reveal reveal-delay-" + ((i % 3) + 1);
 
+    const links = [];
+    if (project.demo) {
+      links.push(
+        `<a class="card-link card-link--demo" href="${CONFIG.demoUrl}#${project.demo}"
+            target="_blank" rel="noopener">
+           Open live demo
+           <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+             <path d="M6 2H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8M9 2h3v3M12 2 6.5 7.5"
+                   stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+           </svg>
+         </a>`
+      );
+    }
+    if (project.repo) {
+      links.push(
+        `<a class="card-link" href="${project.repo}" target="_blank" rel="noopener">Source</a>`
+      );
+    }
+
     card.innerHTML = `
       <div class="card-number">${String(i + 1).padStart(2, "0")}</div>
       <div>
@@ -545,6 +578,7 @@ function initProjects() {
       <div class="card-tags">
         ${project.tags.map((t) => `<span class="card-tag">${t}</span>`).join("")}
       </div>
+      ${links.length ? `<div class="card-links">${links.join("")}</div>` : ""}
     `;
 
     grid.appendChild(card);
@@ -659,6 +693,170 @@ function initKonami() {
 }
 
 /* ============================================================
+   DEPTH — parallax, card tilt, magnetic buttons, name reveal
+   Everything here is decoration: each piece checks for its own
+   elements and bails out quietly when they are absent, and the
+   whole layer is skipped when the visitor prefers reduced motion.
+   ============================================================ */
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FINE_POINTER = window.matchMedia("(pointer: fine)").matches;
+
+/* One shared scroll loop — every parallax layer reads the same frame.
+   Shift is driven by how far a layer's centre sits from the centre of the
+   viewport, so it peaks as the layer passes through and returns to zero on
+   either side. Measuring from a cached base offset keeps the movement out of
+   its own input, which would otherwise compound on every frame.
+
+   Layers are moved with the standalone `translate` property rather than
+   `transform`, so a layer that is also a .reveal target keeps its own
+   0.75s entrance transform instead of fighting this one for the slot. */
+function initParallax() {
+  const layers = [
+    { el: document.querySelector(".hero__content"),        rate:  0.10, max: 46 },
+    { el: document.querySelector(".hero__wordcloud-wrap"), rate: -0.07, max: 40 },
+    { el: document.querySelector(".hero__scroll-hint"),    rate:  0.16, max: 30 },
+    // The portrait drifts, but its accent border is drawn as a deliberate
+    // offset of the frame — parallaxing them apart pulls the pair to pieces,
+    // so the whole .about__image group moves as one instead.
+    { el: document.querySelector(".about__image"),         rate:  0.05, max: 20 },
+  ].filter((l) => l.el);
+
+  if (!layers.length) return;
+
+  // Cached geometry, read while every layer is still untransformed.
+  const measure = () => {
+    layers.forEach((l) => {
+      l.el.style.translate = "";
+      const r = l.el.getBoundingClientRect();
+      l.base = r.top + window.scrollY + r.height / 2;
+    });
+  };
+
+  let ticking = false;
+
+  const frame = () => {
+    const mid = window.scrollY + window.innerHeight / 2;
+    layers.forEach((l) => {
+      const shift = Math.max(-l.max, Math.min(l.max, (l.base - mid) * l.rate));
+      l.el.style.translate = "0 " + shift.toFixed(2) + "px";
+    });
+    ticking = false;
+  };
+
+  const schedule = () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(frame); }
+  };
+
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", () => { measure(); schedule(); }, { passive: true });
+
+  measure();
+  frame();
+}
+
+/* Project cards lean toward the cursor and catch a sheen under it. */
+function initCardTilt() {
+  const cards = document.querySelectorAll(".project-card");
+  const MAX = 7; // degrees
+
+  cards.forEach((card) => {
+    let raf = null;
+
+    const move = (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+
+      card.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+      card.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        card.style.transform =
+          "perspective(1400px)" +
+          " rotateX(" + ((0.5 - py) * MAX).toFixed(2) + "deg)" +
+          " rotateY(" + ((px - 0.5) * MAX).toFixed(2) + "deg)" +
+          " translate3d(0,-3px,0)";
+      });
+    };
+
+    card.addEventListener("pointerenter", (e) => {
+      card.style.transition = "none";
+      move(e);
+    });
+    card.addEventListener("pointermove", move);
+    card.addEventListener("pointerleave", () => {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transition = "";
+      card.style.transform = "";
+    });
+  });
+}
+
+/* Buttons and contact rows drift a little toward the cursor. */
+function initMagnetic() {
+  const pull = (el, strength) => {
+    let raf = null;
+
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        el.style.transform =
+          "translate3d(" + (dx * strength).toFixed(2) + "px," +
+          (dy * strength).toFixed(2) + "px,0)";
+      });
+    });
+
+    el.addEventListener("pointerleave", () => {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      el.style.transition = "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)";
+      el.style.transform = "";
+      setTimeout(() => { el.style.transition = ""; }, 460);
+    });
+
+    el.addEventListener("pointerenter", () => { el.style.transition = "none"; });
+  };
+
+  document.querySelectorAll(".hero__actions .btn").forEach((b) => pull(b, 0.22));
+  document.querySelectorAll(".card-link").forEach((b) => pull(b, 0.18));
+}
+
+/* The name assembles itself once, on load. */
+function initNameReveal() {
+  const parts = document.querySelectorAll(".name-first, .name-last");
+  if (!parts.length) return;
+
+  let i = 0;
+  parts.forEach((part) => {
+    const text = part.textContent;
+    part.textContent = "";
+    [...text].forEach((ch) => {
+      const span = document.createElement("span");
+      span.className = "name-char";
+      span.textContent = ch;
+      span.style.animationDelay = (0.16 + i * 0.062).toFixed(3) + "s";
+      part.appendChild(span);
+      i++;
+    });
+  });
+}
+
+function initDepth() {
+  initNameReveal();
+  if (REDUCED) return;
+  initParallax();
+  if (!FINE_POINTER) return;   // tilt and magnetism need a real cursor
+  initCardTilt();
+  initMagnetic();
+}
+
+/* ============================================================
    BOOT — run everything
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
@@ -673,4 +871,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initContact();
   initReveal();   // run after projects/contact render their dynamic elements
   initKonami();
+  initDepth();  // last: tilt and magnetism attach to rendered cards
 });

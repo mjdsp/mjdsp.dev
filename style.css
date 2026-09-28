@@ -1155,8 +1155,98 @@ h3 { font-family: var(--font-display); font-size: clamp(1.2rem, 2vw,  1.6rem); l
   .stack__plate { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* ============================================================
+   DEPTH — parallax, card tilt, magnetic buttons, load sequence
+   ============================================================ */
+
+/* Demo + source links on project cards */
+.card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(193, 122, 84, 0.35);
+  color: var(--terracotta);
+  text-decoration: none;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.card-link:hover { background: var(--terracotta); border-color: var(--terracotta); color: var(--cream); }
+.card-link--demo::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* A lone final card fills the row instead of sitting by itself */
+.project-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* Cards sit in a shared perspective so the tilt reads as one surface */
+.projects__grid { perspective: 1400px; }
+.project-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+/* Cursor-tracked sheen — JS feeds --mx / --my as percentages */
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition);
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(193, 122, 84, 0.13),
+    transparent 62%
+  );
+}
+.project-card:hover::after { opacity: 1; }
+.project-card > * { transform: translateZ(22px); }
+.project-card .card-desc,
+.project-card .card-tags { transform: translateZ(12px); }
+
+/* Parallax layers — JS writes --shift, CSS decides how far each drifts */
+.hero__content,
+.hero__wordcloud-wrap,
+.hero__scroll-hint,
+.about__image {
+  will-change: translate;
+}
+
+/* Magnetic buttons */
+.btn { will-change: transform; }
+
+/* Hero name — characters arrive one after another on load */
+.name-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.42em) rotate(3deg);
+  animation: charIn 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes charIn {
+  to { opacity: 1; transform: none; }
+}
+
+/* Section edges catch a little light as they enter */
+.reveal { will-change: opacity, transform; }
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
   * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  .name-char { opacity: 1; transform: none; animation: none; }
+  .project-card { transform: none !important; }
+  .hero__content, .hero__wordcloud-wrap, .hero__scroll-hint, .about__image { translate: none !important; }
+  .project-card::after { display: none; }
 }
