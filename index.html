@@ -1,261 +1,966 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mj Despi | Developer & Designer</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Mj Despi | Developer &amp; Designer</title>
+<meta name="description" content="Mj Despi — full-stack developer, designer, QA tester and automation builder." />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Archivo:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 
-  <link rel="stylesheet" href="style.css" />
+<style>
+/* ============================================================
+   MJ DESPI — "LOW LIGHT" THEME
+   A dark editorial stage. One warm brass accent carries every
+   interactive state; everything else stays quiet so the light
+   under the cursor is the thing that moves.
+   ============================================================ */
+
+:root{
+  /* neutrals, biased green-gold so they never read as flat grey */
+  --void:#0A0D0C;
+  --ground:#0E1312;
+  --raise:#151D1A;
+  --edge:rgba(236,231,221,.10);
+  --edge-lit:rgba(203,161,53,.34);
+
+  /* type */
+  --paper:#ECE7DD;
+  --paper-dim:rgba(236,231,221,.60);
+  --paper-faint:rgba(236,231,221,.34);
+
+  /* the single bold move */
+  --brass:#CBA135;
+  --brass-lit:#E8C766;
+  --brass-dim:rgba(203,161,53,.16);
+
+  /* cool counterweight for data and labels */
+  --ice:#8FB8AD;
+
+  --display:'Bodoni Moda',Didot,'Bodoni MT',Georgia,serif;
+  --body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  --ease:cubic-bezier(.22,1,.36,1);
+  --gut:clamp(20px,5vw,72px);
+
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--void);
+  color:var(--paper);
+  font-family:var(--body);
+  font-weight:300;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:2px}
+::selection{background:var(--brass);color:var(--void)}
+
+/* ---------- ambient layers ---------- */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#grain{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  opacity:.055;mix-blend-mode:screen;
+}
+#spot{
+  position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(
+    460px circle at var(--px,50%) var(--py,30%),
+    rgba(203,161,53,.10), rgba(203,161,53,.035) 42%, transparent 68%
+  );
+  opacity:0;transition:opacity .6s var(--ease);
+}
+body.lit #spot{opacity:1}
+
+/* ---------- custom cursor ---------- */
+.cur,.ring{position:fixed;top:0;left:0;z-index:90;pointer-events:none;border-radius:50%;opacity:0}
+.cur{width:6px;height:6px;background:var(--brass-lit);margin:-3px 0 0 -3px}
+.ring{
+  width:34px;height:34px;margin:-17px 0 0 -17px;
+  border:1px solid rgba(203,161,53,.45);
+  transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),
+             border-color .3s var(--ease),background .3s var(--ease);
+}
+body.lit .cur,body.lit .ring{opacity:1}
+body.grab .ring{
+  width:62px;height:62px;margin:-31px 0 0 -31px;
+  border-color:var(--brass);background:rgba(203,161,53,.09);
+}
+
+/* ---------- scroll thread ---------- */
+#thread{
+  position:fixed;top:0;left:0;height:2px;width:0;z-index:80;
+  background:linear-gradient(90deg,transparent,var(--brass));
+}
+
+/* ---------- curtain ---------- */
+#curtain{
+  position:fixed;inset:0;z-index:100;background:var(--void);
+  display:grid;place-items:center;transition:opacity .9s var(--ease),visibility .9s;
+}
+#curtain span{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--brass);
+}
+body.up #curtain{opacity:0;visibility:hidden}
+
+/* ---------- shell ---------- */
+.shell{position:relative;z-index:3}
+.bound{max-width:1280px;margin:0 auto;padding-inline:var(--gut)}
+
+/* ---------- nav ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:70;
+  padding:18px var(--gut);padding-top:calc(18px + env(safe-area-inset-top,0px));
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  transition:background .4s var(--ease),backdrop-filter .4s var(--ease),padding .4s var(--ease);
+}
+body.deep .nav{
+  background:rgba(10,13,12,.78);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--edge);padding-block:12px;
+  padding-top:calc(12px + env(safe-area-inset-top,0px));
+}
+.mark{font-family:var(--display);font-size:1.25rem;letter-spacing:-.02em}
+.mark i{color:var(--brass);font-style:normal}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0}
+.nav a.lnk{
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--paper-faint);padding:8px 13px;border-radius:99px;transition:color .3s,background .3s;
+}
+.nav a.lnk:hover,.nav a.lnk.on{color:var(--brass);background:var(--brass-dim)}
+@media (max-width:760px){.nav ul{display:none}}
+
+/* ---------- shared section furniture ---------- */
+section{position:relative}
+.pad{padding-block:clamp(96px,14vh,190px)}
+.eyebrow{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--brass);display:flex;align-items:center;gap:11px;margin-bottom:26px;
+}
+.eyebrow::before{content:'';width:34px;height:1px;background:var(--brass);opacity:.55}
+.h2{font-size:clamp(2.1rem,5.2vw,3.9rem);line-height:1.04}
+.h2 em{font-style:italic;color:var(--brass)}
+.lede{font-size:1.02rem;line-height:1.8;color:var(--paper-dim);max-width:62ch;margin-top:20px}
+
+/* reveal — resting state is visible; JS only adds the entrance */
+.rv{opacity:1;transform:none}
+body.anim .rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+body.anim .rv.in{opacity:1;transform:none}
+
+/* ---------- hero ---------- */
+.hero{min-height:88vh;display:flex;align-items:center;padding-top:110px;padding-bottom:70px}
+.hero__grid{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(30px,6vw,80px);align-items:center;width:100%}
+@media (max-width:980px){.hero__grid{grid-template-columns:1fr;gap:40px}}
+
+.status{
+  display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);
+  font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ice);
+  border:1px solid var(--edge);border-radius:99px;padding:7px 15px;margin-bottom:34px;
+}
+.status i{width:6px;height:6px;border-radius:50%;background:var(--ice);animation:pulse 2.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(143,184,173,.5)}50%{opacity:.55;box-shadow:0 0 0 7px rgba(143,184,173,0)}}
+
+.name{font-size:clamp(4.2rem,15vw,11.5rem);line-height:.82;letter-spacing:-.045em;margin:0}
+.name .ln{display:block}
+.name .ln:last-child{color:var(--brass);font-style:italic;margin-left:.08em}
+.ch{display:inline-block;will-change:transform}
+
+.tag{
+  font-size:clamp(1rem,1.9vw,1.24rem);line-height:1.6;color:var(--paper-dim);
+  margin-top:34px;max-width:40ch;font-weight:300;
+}
+.tag b{color:var(--paper);font-weight:400}
+
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:14px 26px;border-radius:99px;border:1px solid var(--brass);
+  transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease);
+  will-change:transform;
+}
+.btn--fill{background:var(--brass);color:var(--void);font-weight:500}
+.btn--fill:hover{background:var(--brass-lit);border-color:var(--brass-lit)}
+.btn--line{color:var(--brass);border-color:var(--edge-lit)}
+.btn--line:hover{border-color:var(--brass);background:var(--brass-dim)}
+
+/* portrait */
+.port{position:relative;justify-self:center;width:min(100%,336px)}
+.port__f{
+  position:relative;aspect-ratio:3/4;border-radius:2px;overflow:hidden;
+  background:var(--raise);border:1px solid var(--edge);
+}
+.port__f img{width:100%;height:100%;object-fit:cover;object-position:center 20%;
+  /* the source is a dark gown on a near-black backdrop, so the duotone rest
+     state has to lift the photo rather than dim it, or the frame reads empty */
+  filter:grayscale(1) contrast(1.18) brightness(1.3);transition:filter .7s var(--ease)}
+.port:hover .port__f img{filter:grayscale(0) contrast(1.04) brightness(1.12)}
+.port__f::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 58%,rgba(10,13,12,.66));
+}
+.port__r{
+  position:absolute;inset:0;translate:14px 14px;border:1px solid var(--edge-lit);
+  border-radius:2px;z-index:-1;pointer-events:none;
+}
+.port__cap{
+  position:absolute;left:14px;bottom:13px;z-index:2;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);
+}
+
+.hint{
+  display:flex;align-items:center;gap:11px;margin-top:64px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--paper-faint);
+}
+.hint i{display:block;width:52px;height:1px;background:var(--paper-faint);position:relative;overflow:hidden}
+.hint i::after{content:'';position:absolute;inset:0;background:var(--brass);animation:sweep 2.6s var(--ease) infinite}
+@keyframes sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+
+/* ---------- about ---------- */
+.about__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(34px,6vw,90px);align-items:start}
+@media (max-width:900px){.about__grid{grid-template-columns:1fr}}
+
+.roles{display:flex;flex-wrap:wrap;gap:7px;margin-top:30px}
+.role{
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;
+  padding:7px 14px;border-radius:99px;border:1px solid var(--edge);color:var(--paper-dim);
+  transition:border-color .3s,color .3s,background .3s;
+}
+.role:hover{border-color:var(--brass);color:var(--brass);background:var(--brass-dim)}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;padding-top:32px;border-top:1px solid var(--edge)}
+.stat b{
+  display:block;font-family:var(--display);font-size:clamp(2rem,4.6vw,3.1rem);
+  line-height:1;color:var(--brass);font-weight:400;font-variant-numeric:tabular-nums;
+}
+.stat span{
+  display:block;margin-top:8px;font-family:var(--mono);font-size:.58rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--paper-faint);line-height:1.5;
+}
+
+/* ---------- capability ledger ---------- */
+.led{border-top:1px solid var(--edge);margin-top:46px}
+.led__row{
+  display:grid;grid-template-columns:52px 1fr auto;gap:18px;align-items:center;
+  padding:22px 4px;border-bottom:1px solid var(--edge);
+  transition:background .4s var(--ease),padding-left .4s var(--ease);position:relative;
+}
+.led__row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--brass);
+  transform:scaleY(0);transform-origin:top;transition:transform .45s var(--ease);
+}
+.led__row:hover{background:linear-gradient(90deg,var(--brass-dim),transparent 62%);padding-left:16px}
+.led__row:hover::before{transform:scaleY(1)}
+.led__n{font-family:var(--mono);font-size:.62rem;color:var(--paper-faint);letter-spacing:.06em}
+.led__t{font-family:var(--display);font-size:clamp(1.15rem,2.4vw,1.6rem);line-height:1.2}
+.led__row:hover .led__t{color:var(--brass)}
+.led__k{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;max-width:52%}
+.led__k span{font-family:var(--mono);font-size:.58rem;color:var(--paper-faint);letter-spacing:.06em}
+@media (max-width:760px){
+  .led__row{grid-template-columns:40px 1fr;gap:12px}
+  .led__k{grid-column:2;justify-content:flex-start;max-width:100%;margin-top:6px}
+}
+
+/* ---------- work rail ---------- */
+.work{background:var(--ground);border-block:1px solid var(--edge)}
+.work__head{padding-top:clamp(84px,12vh,150px)}
+.railwrap{height:auto}
+body.rail .railwrap{height:var(--railh,300vh)}
+.railstick{padding-block:50px clamp(84px,12vh,150px)}
+body.rail .railstick{
+  position:sticky;top:0;height:100vh;display:flex;align-items:center;
+  overflow:hidden;padding-block:0;
+}
+.track{display:grid;gap:22px;grid-template-columns:1fr;padding-inline:var(--gut)}
+body.rail .track{
+  display:flex;grid-template-columns:none;gap:28px;
+  padding-left:var(--gut);padding-right:0;will-change:transform;
+}
+
+.proj{
+  position:relative;background:var(--raise);border:1px solid var(--edge);
+  border-radius:3px;padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;gap:16px;
+  overflow:hidden;transform-style:preserve-3d;will-change:transform;
+}
+body.rail .proj{flex:0 0 clamp(360px,42vw,560px);min-height:min(66vh,560px)}
+.proj::after{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .45s var(--ease);
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(203,161,53,.13),transparent 62%);
+}
+.proj:hover::after{opacity:1}
+.proj:hover{border-color:var(--edge-lit)}
+.proj > *{transform:translateZ(26px)}
+.proj__n{font-family:var(--mono);font-size:.62rem;color:var(--brass);letter-spacing:.2em}
+.proj__t{font-family:var(--display);font-size:clamp(1.3rem,2.6vw,1.9rem);line-height:1.16}
+.proj__d{font-size:.9rem;line-height:1.75;color:var(--paper-dim);font-weight:300}
+.proj__k{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.proj__k span{
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;
+  padding:4px 9px;border-radius:99px;border:1px solid var(--edge);color:var(--paper-faint);
+}
+.proj__a{display:flex;flex-wrap:wrap;gap:9px;padding-top:6px}
+.plink{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:9px 16px;border-radius:99px;border:1px solid var(--edge-lit);color:var(--brass);
+  transition:background .3s,color .3s,border-color .3s;will-change:transform;
+}
+.plink:hover{background:var(--brass);color:var(--void);border-color:var(--brass)}
+.plink--q{border-color:var(--edge);color:var(--paper-dim)}
+.plink--q:hover{background:var(--paper);color:var(--void);border-color:var(--paper)}
+.plink i{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+.railnote{
+  display:none;margin-top:26px;font-family:var(--mono);font-size:.6rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--paper-faint);
+}
+body.rail .railnote{display:block}
+
+/* ---------- stack ---------- */
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin-top:30px}
+.fbtn{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:8px 15px;border-radius:99px;border:1px solid var(--edge);color:var(--paper-faint);
+  transition:all .3s var(--ease);
+}
+.fbtn:hover{color:var(--paper);border-color:var(--paper-faint)}
+.fbtn[aria-pressed="true"]{background:var(--brass);border-color:var(--brass);color:var(--void);font-weight:500}
+
+.marks{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(122px,1fr));
+  gap:1px;margin-top:34px;background:var(--edge);border:1px solid var(--edge);
+}
+.mk{
+  background:var(--ground);padding:24px 12px;display:flex;flex-direction:column;
+  align-items:center;gap:11px;transition:background .35s var(--ease),opacity .35s var(--ease);
+}
+.mk svg{width:26px;height:26px;color:var(--paper-faint);transition:color .35s var(--ease),transform .35s var(--ease)}
+.mk b{font-family:var(--mono);font-size:.6rem;font-weight:400;letter-spacing:.08em;color:var(--paper-dim);text-align:center}
+.mk:hover{background:var(--raise)}
+.mk:hover svg{color:var(--brass);transform:translateY(-3px) scale(1.1)}
+.mk:hover b{color:var(--paper)}
+.mk.dim{opacity:.2}
+
+/* ---------- contact ---------- */
+.contact{background:var(--ground);border-top:1px solid var(--edge)}
+.big{
+  font-family:var(--display);font-size:clamp(2.4rem,7vw,5.4rem);line-height:1.02;
+  letter-spacing:-.03em;margin-top:8px;
+}
+.big em{font-style:italic;color:var(--brass)}
+.links{display:grid;gap:1px;margin-top:52px;background:var(--edge);border-block:1px solid var(--edge)}
+.link{
+  display:grid;grid-template-columns:110px 1fr auto;gap:18px;align-items:center;
+  background:var(--ground);padding:22px 6px;transition:background .4s var(--ease),padding .4s var(--ease);
+}
+.link:hover{background:var(--raise);padding-inline:18px 6px}
+.link__l{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--paper-faint)}
+.link__v{font-size:.98rem;color:var(--paper);overflow:hidden;text-overflow:ellipsis}
+.link:hover .link__v{color:var(--brass)}
+.link__g{font-family:var(--mono);color:var(--paper-faint);transition:transform .4s var(--ease),color .4s}
+.link:hover .link__g{transform:translateX(6px);color:var(--brass)}
+@media (max-width:620px){
+  .link{grid-template-columns:1fr auto;gap:4px 12px}
+  .link__l{grid-column:1/-1}
+}
+
+.foot{
+  display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;
+  padding-block:34px calc(44px + env(safe-area-inset-bottom,0px));
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--paper-faint);
+}
+.foot a:hover{color:var(--brass)}
+
+/* ---------- reduced motion / coarse pointer ---------- */
+@media (pointer:coarse){
+  .cur,.ring,#spot{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .cur,.ring,#spot,#grain{display:none}
+  body.anim .rv{opacity:1;transform:none}
+  .proj{transform:none!important}
+  .proj::after{display:none}
+}
+</style>
 </head>
 <body>
 
-  <div id="scroll-progress"></div>
-  <div class="cursor-dot" id="cursor-dot"></div>
-  <div class="cursor-ring" id="cursor-ring"></div>
+<div id="curtain"><span>Mj Despi</span></div>
 
-  <!-- ============================================================
-       NAVIGATION
-  ============================================================ -->
-  <nav class="navbar" id="navbar">
-    <a href="#hero" class="navbar__logo">Mj<span class="logo-dot">.</span></a>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="grain" aria-hidden="true"></canvas>
+<div id="spot" aria-hidden="true"></div>
+<div id="thread" aria-hidden="true"></div>
+<div class="cur" aria-hidden="true"></div>
+<div class="ring" aria-hidden="true"></div>
 
-    <ul class="navbar__links">
-      <li><a href="#about"    class="nav-link">About</a></li>
-      <li><a href="#skills"   class="nav-link">Skills</a></li>
-      <li><a href="#projects" class="nav-link">Work</a></li>
-      <li><a href="#contact"  class="nav-link">Contact</a></li>
-    </ul>
+<header class="nav">
+  <a href="#top" class="mark">Mj<i>.</i></a>
+  <ul>
+    <li><a href="#about"   class="lnk">About</a></li>
+    <li><a href="#work"    class="lnk">Work</a></li>
+    <li><a href="#stack"   class="lnk">Stack</a></li>
+    <li><a href="#contact" class="lnk">Contact</a></li>
+  </ul>
+  <a href="demos.html" class="btn btn--line" style="padding:10px 18px">Live demos</a>
+</header>
 
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+<main class="shell" id="top">
 
-    <div class="drawer" id="drawer">
-      <ul>
-        <li><a href="#about"    class="drawer-link">About</a></li>
-        <li><a href="#skills"   class="drawer-link">Skills</a></li>
-        <li><a href="#projects" class="drawer-link">Work</a></li>
-        <li><a href="#contact"  class="drawer-link">Contact</a></li>
-      </ul>
-    </div>
-    <div class="drawer-overlay" id="drawer-overlay"></div>
-  </nav>
-
-  <!-- ============================================================
-       HERO — two-column: left = name/CTA, right = word cloud
-  ============================================================ -->
-  <section id="hero" class="hero">
-    <canvas id="hero-canvas"></canvas>
-
-    <div class="hero__layout">
-
-      <!-- LEFT — identity -->
-      <div class="hero__content">
-        <span class="section-label hero__eyebrow">
-          <span class="eyebrow-dot"></span>
-          Available for work
-        </span>
-
-        <h1 class="hero__name">
-          <span class="name-first">Mj</span><br>
-          <span class="name-last">Despi</span>
+  <!-- ===================== HERO ===================== -->
+  <section class="hero bound">
+    <div class="hero__grid">
+      <div>
+        <span class="status"><i></i>Available for work</span>
+        <h1 class="name">
+          <span class="ln" data-split>Mj</span>
+          <span class="ln" data-split>Despi</span>
         </h1>
-
-        <p class="hero__tagline">
-          I build things. I break them on purpose.<br>Then I make them look good.
+        <p class="tag">
+          I build things. I break them on purpose.<br>
+          Then I make them <b>look good.</b>
         </p>
-
-        <div class="hero__actions">
-          <a href="#projects" class="btn btn-primary">View My Work</a>
-          <a href="MJ_Despi_Resume.pdf" target="_blank" rel="noopener" class="btn btn-ghost">
-            View Resume
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M6 2H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8M9 2h3v3M12 2 6.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
+        <div class="cta">
+          <a href="demos.html" class="btn btn--fill">Open live demos</a>
+          <a href="MJ_Despi_Resume.pdf" target="_blank" rel="noopener" class="btn btn--line">View resume</a>
         </div>
+        <div class="hint"><i></i>Scroll</div>
       </div>
 
-      <!-- RIGHT — word cloud canvas -->
-      <div class="hero__wordcloud-wrap">
-        <canvas id="wordcloud-canvas"></canvas>
-      </div>
-
-    </div>
-
-    <div class="hero__scroll-hint">
-      <div class="scroll-line"></div>
-      <span>Scroll</span>
+      <figure class="port">
+        <div class="port__f">
+          <img src="MJ_PIC.jpg" alt="Portrait of Mj Despi" decoding="async">
+          <figcaption class="port__cap">Manila, PH</figcaption>
+        </div>
+        <span class="port__r"></span>
+      </figure>
     </div>
   </section>
 
-  <!-- ============================================================
-       ABOUT
-  ============================================================ -->
-  <section id="about" class="about">
-    <div class="about__inner">
-
-      <div class="about__image reveal">
-        <div class="image-frame">
-          <div class="image-placeholder">
-            <div class="placeholder-shape outer"></div>
-            <div class="placeholder-shape inner"></div>
-          </div>
-          <img class="image-frame__photo" src="MJ_PIC.jpg" alt="Portrait of Mj Despi" loading="lazy" decoding="async" />
-        </div>
-        <div class="image-accent"></div>
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about" class="pad bound">
+    <div class="about__grid">
+      <div>
+        <span class="eyebrow rv">Who's behind the screen</span>
+        <h2 class="h2 rv">Not a full-stack dev.<br><em>A full-picture one.</em></h2>
       </div>
-
-      <div class="about__text">
-        <span class="section-label reveal">Who's behind the screen</span>
-
-        <h2 class="about__heading reveal reveal-delay-1">
-          Not a full-stack dev.<br>
-          <em>A full-picture one.</em>
-        </h2>
-
-        <p class="about__bio reveal reveal-delay-2">
+      <div>
+        <p class="lede rv">
           I'm a multi-disciplinary tech person who doesn't stay in one lane.
           I design interfaces, architect backends, automate what should be automated,
           and QA test everything until it breaks, because it will.
           I like working at the edges of where things connect.
         </p>
-
-        <div class="about__roles reveal reveal-delay-3" id="roles-container"></div>
-
-        <div class="about__stats reveal reveal-delay-4">
-          <div class="stat">
-            <span class="stat-num">2+</span>
-            <span class="stat-label">Years developing</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">4</span>
-            <span class="stat-label">Projects</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num">∞</span>
-            <span class="stat-label">Tabs open right now</span>
-          </div>
+        <div class="roles rv" id="roles"></div>
+        <div class="stats rv">
+          <div class="stat"><b data-count="2" data-suffix="+">0</b><span>Years developing</span></div>
+          <div class="stat"><b data-count="5">0</b><span>Projects shipped</span></div>
+          <div class="stat"><b>&#8734;</b><span>Tabs open right now</span></div>
         </div>
       </div>
+    </div>
 
+    <div class="led rv" id="ledger"></div>
+  </section>
+
+  <!-- ===================== WORK ===================== -->
+  <section id="work" class="work">
+    <div class="work__head bound">
+      <span class="eyebrow rv">Selected work</span>
+      <h2 class="h2 rv">Things I've<br><em>actually shipped.</em></h2>
+      <p class="lede rv">Every one of these opens as a working front-end prototype — click through it instead of reading about it.</p>
+      <p class="railnote rv">Scroll to move sideways</p>
+    </div>
+
+    <div class="railwrap" id="railwrap">
+      <div class="railstick" id="railstick">
+        <div class="track" id="track"></div>
+      </div>
     </div>
   </section>
 
-  <!-- ============================================================
-       SKILLS — CONSTELLATION
-  ============================================================ -->
-  <section id="skills" class="skills">
-    <div class="skills__header">
-      <span class="section-label" style="color: var(--sand); opacity: 0.7;">The stack I live in</span>
-      <h2 class="skills__heading reveal">
-        Every skill,<br><em>mapped to its star.</em>
-      </h2>
-    </div>
+  <!-- ===================== STACK ===================== -->
+  <section id="stack" class="pad bound">
+    <span class="eyebrow rv">The stack I live in</span>
+    <h2 class="h2 rv">Every tool,<br><em>earned in practice.</em></h2>
+    <div class="filters rv" id="filters"></div>
+    <div class="marks rv" id="marks"></div>
+  </section>
 
-    <div class="skills__map">
-      <div class="skills__legend" id="skills-legend"></div>
-      <div class="skills__svg-wrap">
-        <svg id="constellation" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid meet"></svg>
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact" class="contact pad">
+    <div class="bound">
+      <span class="eyebrow rv">Say hello</span>
+      <h2 class="big rv">Got something<br><em>worth building?</em></h2>
+      <div class="links rv" id="links"></div>
+      <div class="foot">
+        <span>&copy; <span id="yr"></span> Mj Despi</span>
+        <span><a href="index.html">Classic theme</a></span>
       </div>
-      <div class="skill-tooltip" id="skill-tooltip"></div>
     </div>
   </section>
 
-  <!-- ============================================================
-       TECH STACK — ink specimen plate (cream sheet, brown marks)
-  ============================================================ -->
-  <section id="stack" class="stack">
-    <div class="stack__inner">
+</main>
 
-      <div class="stack__header">
-        <span class="section-label reveal">Plate No. 01 — the tools themselves</span>
-        <h2 class="stack__heading reveal reveal-delay-1">
-          Pressed in ink,<br><em>not just listed.</em>
-        </h2>
-        <p class="stack__note reveal reveal-delay-2">
-          The constellation above is how I think about the work.
-          This is what's actually open on my machine. Hover a cell to ink it.
-        </p>
-      </div>
+<script src="logos.js"></script>
+<script>
+/* ============================================================
+   CONTENT — mirrors CONFIG in script.js
+   ============================================================ */
+const DATA = {
+  email:"despi091402@gmail.com",
+  github:"https://github.com/mjdsp",
+  linkedin:"https://www.linkedin.com/in/mj-despi-37a28a386/",
+  number:"+63 929 492 0224",
 
-      <div class="stack__key reveal reveal-delay-2" id="stack-key"></div>
+  roles:["Full-Stack Developer","Backend Developer","UI/UX Designer","Manual QA Tester","AI Automation Specialist"],
 
-      <div class="stack__sheet reveal reveal-delay-3">
-        <div class="stack__plate" id="stack-plate"></div>
-      </div>
+  ledger:[
+    { t:"Design the interface",  k:["Figma","Design systems","Motion","Accessibility"] },
+    { t:"Architect the backend", k:["PHP","Laravel","MySQL","PostgreSQL","Docker"] },
+    { t:"Automate the repeat",   k:["n8n","OpenAI","Webhooks","Zapier"] },
+    { t:"Break it before users do", k:["Manual testing","Test cases","Postman","Playwright"] },
+  ],
 
-      <div class="stack__caption reveal">
-        <span id="stack-count"></span>
-        <span>Monochrome · one plate · no filler</span>
-      </div>
+  projects:[
+    { t:"Manage My Money", s:"Personal finance manager",
+      d:"Tracks accounts, debts and everyday spending. Handles loans with real monthly interest and repayment plans, auto-posts recurring bills, and turns photographed receipts into itemised reimbursement claims with AI extraction. Monthly reports export to PDF.",
+      k:["Laravel 12","Inertia","React","TypeScript","Tailwind","shadcn/ui","MySQL"],
+      demo:"money", repo:"https://github.com/mjdsp/manage-my-money" },
+    { t:"Quizmetrix", s:"Learning &amp; assessment platform",
+      d:"A web-based study platform that helps students create, organize and review learning materials through flashcards, quizzes, mock examinations and AI-assisted study tools.",
+      k:["HTML","CSS","JavaScript","PHP","MySQL","Bootstrap","AI Integration"],
+      demo:"quiz" },
+    { t:"UniShop", s:"Campus uniform mobile app",
+      d:"A mobile commerce application that lets students browse available school uniforms, check stock availability and pre-order items through their smartphones.",
+      k:["Android Studio","XML","Java","UI/UX"],
+      demo:"shop" },
+    { t:"ChronoSync", s:"Room &amp; time management",
+      d:"A scheduling and facility management system that streamlines room reservations, schedule coordination and resource allocation within an organization.",
+      k:["HTML","CSS","JavaScript","UI/UX"],
+      demo:"chrono" },
+    { t:"DocuFlow AI", s:"Document automation",
+      d:"An AI-powered workflow platform that extracts, validates, categorises and stores information from uploaded documents, automating data entry and reporting end to end.",
+      k:["n8n","OpenAI","Webhooks","Google Sheets","Hostinger"],
+      demo:"flow" },
+  ],
 
-    </div>
-  </section>
+  families:[
+    { code:"FE", label:"Front-end" }, { code:"BE", label:"Back-end" },
+    { code:"UI", label:"Design"    }, { code:"QA", label:"Testing"  },
+    { code:"OP", label:"Ops"       }, { code:"AI", label:"AI / Automation" },
+  ],
 
-  <!-- ============================================================
-       PROJECTS
-  ============================================================ -->
-  <section id="projects" class="projects">
-    <div class="projects__inner">
-      <div class="projects__header">
-        <span class="section-label reveal">Selected work</span>
-        <h2 class="projects__heading reveal reveal-delay-1">
-          Things I've<br><em>actually shipped.</em>
-        </h2>
-      </div>
-      <div class="projects__grid" id="projects-grid"></div>
-    </div>
-  </section>
+  stack:[
+    { n:"HTML5", l:"html5", f:"FE" }, { n:"CSS3", l:"css", f:"FE" },
+    { n:"JavaScript", l:"javascript", f:"FE" }, { n:"Bootstrap", l:"bootstrap", f:"FE" },
+    { n:"PHP", l:"php", f:"BE" }, { n:"MySQL", l:"mysql", f:"BE" },
+    { n:"PostgreSQL", l:"postgresql", f:"BE" }, { n:"TablePlus", l:"tableplus", f:"BE" },
+    { n:"Docker", l:"docker", f:"BE" }, { n:"Figma", l:"figma", f:"UI" },
+    { n:"Postman", l:"postman", f:"QA" }, { n:"Playwright", l:"playwright", f:"QA" },
+    { n:"GitHub", l:"github", f:"OP" }, { n:"Hostinger", l:"hostinger", f:"OP" },
+    { n:"n8n", l:"n8n", f:"AI" }, { n:"OpenAI", l:"openai", f:"AI" },
+    { n:"Claude", l:"claude", f:"AI" }, { n:"Zapier", l:"zapier", f:"AI" },
+  ],
+};
 
-  <!-- ============================================================
-       CONTACT
-  ============================================================ -->
-  <section id="contact" class="contact">
-    <div class="contact__inner">
-      <span class="section-label reveal" style="color: var(--sand); opacity: 0.6;">Let's build something</span>
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FINE    = matchMedia("(pointer: fine)").matches;
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const el = (t, c, h) => { const n=document.createElement(t); if(c) n.className=c; if(h!=null) n.innerHTML=h; return n; };
+const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+const lerp  = (a,b,t) => a + (b-a)*t;
 
-      <h2 class="contact__heading reveal reveal-delay-1">
-        Got a project in mind?<br>
-        <em>I'm usually a message away.</em>
-      </h2>
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render() {
+  $("#yr").textContent = new Date().getFullYear();
 
-      <p class="contact__sub reveal reveal-delay-2">
-        Open to consultant, contract, and full-time opportunities.
-        If you've got something interesting, let's talk.
-      </p>
+  DATA.roles.forEach(r => $("#roles").appendChild(el("span","role",r)));
 
-      <div class="contact__links" id="contact-links"></div>
+  DATA.ledger.forEach((row,i) => {
+    $("#ledger").appendChild(el("div","led__row",
+      `<span class="led__n">${String(i+1).padStart(2,"0")}</span>
+       <span class="led__t">${row.t}</span>
+       <span class="led__k">${row.k.map(k=>`<span>${k}</span>`).join("")}</span>`));
+  });
 
-      <footer class="contact__footer reveal">
-        <span class="footer-name">Mj Despi</span>
-        <span class="footer-year">© <span id="year"></span></span>
-      </footer>
-    </div>
-  </section>
+  DATA.projects.forEach((p,i) => {
+    const card = el("article","proj");
+    const acts = [
+      `<a class="plink" href="demos.html#${p.demo}"><i></i>Open live demo</a>`,
+      p.repo ? `<a class="plink plink--q" href="${p.repo}" target="_blank" rel="noopener">Source</a>` : "",
+    ].join("");
+    card.innerHTML =
+      `<span class="proj__n">${String(i+1).padStart(2,"0")} / ${p.s}</span>
+       <h3 class="proj__t">${p.t}</h3>
+       <p class="proj__d">${p.d}</p>
+       <div class="proj__k">${p.k.map(k=>`<span>${k}</span>`).join("")}</div>
+       <div class="proj__a">${acts}</div>`;
+    $("#track").appendChild(card);
+  });
 
-  <!-- ============================================================
-       EASTER EGG
-  ============================================================ -->
-  <div class="easter-egg" id="easter-egg">
-    <div class="easter-egg__box">
-      <div class="easter-egg__emoji">🍪</div>
-      <h3 class="easter-egg__title">You found the secret.</h3>
-      <p class="easter-egg__text">
-        ↑ ↑ ↓ ↓ ← → ← → B A<br>
-        Most people don't make it this far.<br>
-        Here's a cookie. You've earned it.
-      </p>
-      <button class="easter-egg__close" id="easter-egg-close">Close & keep exploring</button>
-    </div>
-  </div>
+  const fbar = $("#filters");
+  const all = el("button","fbtn","All");
+  all.setAttribute("aria-pressed","true");
+  fbar.appendChild(all);
+  const fbtns = [all, ...DATA.families.map(f => {
+    const b = el("button","fbtn",f.label);
+    b.dataset.code = f.code;
+    b.setAttribute("aria-pressed","false");
+    fbar.appendChild(b);
+    return b;
+  })];
 
-  <script src="logos.js"></script>
-  <script src="script.js"></script>
-  <script src="wordcloud.js"></script>
+  DATA.stack.forEach(t => {
+    // logos.js declares `const TECH_LOGOS` at top level. A top-level const is a
+    // lexical binding, not a window property, so `window.TECH_LOGOS` is undefined
+    // even though the name itself is in scope here.
+    const path = (typeof TECH_LOGOS !== "undefined" && TECH_LOGOS[t.l]) || "";
+    const m = el("div","mk",
+      `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${path}</svg><b>${t.n}</b>`);
+    m.dataset.code = t.f;
+    $("#marks").appendChild(m);
+  });
+
+  fbtns.forEach(b => b.onclick = () => {
+    fbtns.forEach(x => x.setAttribute("aria-pressed", String(x===b)));
+    const code = b.dataset.code;
+    $$(".mk").forEach(m => m.classList.toggle("dim", !!code && m.dataset.code !== code));
+  });
+
+  const contact = [
+    ["Email",    DATA.email,                              "mailto:"+DATA.email],
+    ["GitHub",   DATA.github.replace("https://",""),      DATA.github],
+    ["LinkedIn", "Mj Despi",                              DATA.linkedin],
+    ["Mobile",   DATA.number,                             null],
+  ];
+  contact.forEach(([l,v,href]) => {
+    const node = href ? el("a","link") : el("div","link");
+    if (href) {
+      node.href = href;
+      if (!href.startsWith("mailto")) { node.target = "_blank"; node.rel = "noopener"; }
+    }
+    node.innerHTML =
+      `<span class="link__l">${l}</span><span class="link__v">${v}</span><span class="link__g">&rarr;</span>`;
+    $("#links").appendChild(node);
+  });
+}
+
+/* ============================================================
+   AMBIENT CANVAS — drifting warm mesh + a pre-rendered grain tile.
+   The grain is baked once into an offscreen tile and stamped, rather
+   than written pixel by pixel every frame, so the loop stays cheap.
+   ============================================================ */
+function ambient() {
+  const c = $("#bg"), x = c.getContext("2d");
+  const blobs = [
+    { hx:.24, hy:.22, r:.52, col:"203,161,53",  a:.13, sx:.00021, sy:.00017 },
+    { hx:.78, hy:.34, r:.44, col:"143,184,173", a:.07, sx:.00015, sy:.00024 },
+    { hx:.52, hy:.82, r:.58, col:"203,161,53",  a:.06, sx:.00012, sy:.00019 },
+  ];
+  let w=0, h=0, t=0;
+
+  const size = () => {
+    const d = Math.min(devicePixelRatio || 1, 2);
+    w = c.width  = Math.max(1, Math.floor(innerWidth  * d));
+    h = c.height = Math.max(1, Math.floor(innerHeight * d));
+    c.style.width = innerWidth + "px";
+    c.style.height = innerHeight + "px";
+  };
+
+  const paint = () => {
+    // A zero-sized canvas (a hidden tab, a collapsed pane) makes the
+    // gradient calls throw, which would kill the whole loop.
+    if (!w || !h) return;
+    x.clearRect(0,0,w,h);
+    blobs.forEach(b => {
+      const cx = w * (b.hx + Math.sin(t*b.sx) * .07);
+      const cy = h * (b.hy + Math.cos(t*b.sy) * .06);
+      const r  = Math.min(w,h) * b.r;
+      const g  = x.createRadialGradient(cx,cy,0,cx,cy,r);
+      g.addColorStop(0,   `rgba(${b.col},${b.a})`);
+      g.addColorStop(.55, `rgba(${b.col},${b.a*.3})`);
+      g.addColorStop(1,   `rgba(${b.col},0)`);
+      x.fillStyle = g;
+      x.fillRect(0,0,w,h);
+    });
+  };
+
+  size();
+  addEventListener("resize", () => { size(); paint(); }, { passive:true });
+  paint();
+  if (REDUCED) return;
+  (function loop(now){ t = now; paint(); requestAnimationFrame(loop); })(0);
+
+  /* grain tile */
+  const gc = $("#grain"), gx = gc.getContext("2d");
+  const tile = document.createElement("canvas");
+  tile.width = tile.height = 128;
+  const tx = tile.getContext("2d");
+  const img = tx.createImageData(128,128);
+  for (let i=0; i<img.data.length; i+=4) {
+    const v = 120 + Math.random()*135;
+    img.data[i] = img.data[i+1] = img.data[i+2] = v;
+    img.data[i+3] = 26;
+  }
+  tx.putImageData(img,0,0);
+
+  const stamp = () => {
+    gc.width = innerWidth; gc.height = innerHeight;
+    const p = gx.createPattern(tile,"repeat");
+    gx.fillStyle = p;
+    gx.fillRect(0,0,gc.width,gc.height);
+  };
+  stamp();
+  addEventListener("resize", stamp, { passive:true });
+}
+
+/* ============================================================
+   POINTER — spotlight, cursor, magnetism, card tilt
+   ============================================================ */
+function pointer() {
+  if (!FINE || REDUCED) return;
+
+  const dot = $(".cur"), ring = $(".ring");
+  let tx=innerWidth/2, ty=innerHeight/2, rx=tx, ry=ty;
+
+  addEventListener("pointermove", e => {
+    tx = e.clientX; ty = e.clientY;
+    document.body.classList.add("lit");
+    document.documentElement.style.setProperty("--px", tx+"px");
+    document.documentElement.style.setProperty("--py", ty+"px");
+  }, { passive:true });
+
+  (function follow(){
+    rx = lerp(rx, tx, .16); ry = lerp(ry, ty, .16);
+    dot.style.transform  = `translate(${tx}px,${ty}px)`;
+    ring.style.transform = `translate(${rx}px,${ry}px)`;
+    requestAnimationFrame(follow);
+  })();
+
+  const grabby = "a, button, .proj, .led__row, .mk, .role";
+  document.addEventListener("pointerover", e => {
+    if (e.target.closest(grabby)) document.body.classList.add("grab");
+  });
+  document.addEventListener("pointerout", e => {
+    if (e.target.closest(grabby)) document.body.classList.remove("grab");
+  });
+
+  /* magnetic pull */
+  $$(".btn, .plink").forEach(b => {
+    let raf = null;
+    b.addEventListener("pointerenter", () => b.style.transition = "none");
+    b.addEventListener("pointermove", e => {
+      const r = b.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width/2);
+      const dy = e.clientY - (r.top  + r.height/2);
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        b.style.transform = `translate(${(dx*.24).toFixed(2)}px,${(dy*.32).toFixed(2)}px)`;
+      });
+    });
+    b.addEventListener("pointerleave", () => {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      b.style.transition = "transform .5s cubic-bezier(.22,1,.36,1)";
+      b.style.transform = "";
+    });
+  });
+
+  /* card tilt + sheen */
+  $$(".proj").forEach(card => {
+    let raf = null;
+    const move = e => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top)  / r.height;
+      card.style.setProperty("--mx", (px*100).toFixed(1)+"%");
+      card.style.setProperty("--my", (py*100).toFixed(1)+"%");
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        card.style.transform =
+          `perspective(1500px) rotateX(${((.5-py)*6).toFixed(2)}deg) rotateY(${((px-.5)*6).toFixed(2)}deg)`;
+      });
+    };
+    card.addEventListener("pointerenter", e => { card.style.transition = "none"; move(e); });
+    card.addEventListener("pointermove", move);
+    card.addEventListener("pointerleave", () => {
+      if (raf) { cancelAnimationFrame(raf); raf = null; }
+      card.style.transition = "transform .6s cubic-bezier(.22,1,.36,1), border-color .35s";
+      card.style.transform = "";
+    });
+  });
+}
+
+/* ============================================================
+   KINETIC NAME — letters lift as the cursor passes
+   ============================================================ */
+function kinetic() {
+  const lines = $$("[data-split]");
+  const chars = [];
+  lines.forEach(line => {
+    const text = line.textContent;
+    line.textContent = "";
+    [...text].forEach(ch => {
+      const s = el("span","ch", ch === " " ? "&nbsp;" : ch);
+      line.appendChild(s);
+      chars.push(s);
+    });
+  });
+  if (!FINE || REDUCED) return;
+
+  let px = -9999, py = -9999, raf = null;
+  addEventListener("pointermove", e => {
+    px = e.clientX; py = e.clientY;
+    if (!raf) raf = requestAnimationFrame(step);
+  }, { passive:true });
+
+  function step() {
+    raf = null;
+    chars.forEach(s => {
+      const r = s.getBoundingClientRect();
+      const dx = px - (r.left + r.width/2);
+      const dy = py - (r.top  + r.height/2);
+      const d  = Math.hypot(dx, dy);
+      const R  = 190;
+      if (d > R) { s.style.transform = ""; return; }
+      const f = (1 - d/R);
+      s.style.transform =
+        `translate(${(-dx*.08*f).toFixed(2)}px,${(-dy*.16*f).toFixed(2)}px) scale(${(1+f*.07).toFixed(3)})`;
+    });
+  }
+}
+
+/* ============================================================
+   HORIZONTAL WORK RAIL — vertical scroll drives sideways travel
+   ============================================================ */
+function rail() {
+  const wrap = $("#railwrap"), stick = $("#railstick"), track = $("#track");
+  const active = () => FINE && !REDUCED && innerWidth >= 900;
+
+  let travel = 0;
+
+  const measure = () => {
+    if (!active()) {
+      document.body.classList.remove("rail");
+      track.style.transform = "";
+      wrap.style.removeProperty("--railh");
+      return;
+    }
+    document.body.classList.add("rail");
+    track.style.transform = "";
+    // How far the track must slide for its last card to clear the viewport.
+    // Read the gutter off the track's own resolved padding. --gut is a clamp(),
+    // and a custom property is not resolved until it is used, so reading it from
+    // :root yields the literal "clamp(...)" text and parseFloat gives NaN —
+    // which then poisons travel and collapses the whole rail.
+    const gut = parseFloat(getComputedStyle(track).paddingLeft) || 40;
+    travel = Math.max(0, track.scrollWidth - innerWidth + gut);
+    wrap.style.setProperty("--railh", (innerHeight + travel) + "px");
+  };
+
+  const frame = () => {
+    if (!document.body.classList.contains("rail")) return;
+    const r = wrap.getBoundingClientRect();
+    const total = wrap.offsetHeight - innerHeight;
+    if (total <= 0) return;
+    const p = clamp(-r.top / total, 0, 1);
+    track.style.transform = `translate3d(${(-p*travel).toFixed(1)}px,0,0)`;
+  };
+
+  measure(); frame();
+  addEventListener("resize", () => { measure(); frame(); }, { passive:true });
+  addEventListener("scroll", () => requestAnimationFrame(frame), { passive:true });
+}
+
+/* ============================================================
+   SCROLL — reveal, nav state, progress thread, counters
+   ============================================================ */
+function scrollFx() {
+  document.body.classList.add("anim");
+
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, { threshold:.16, rootMargin:"0px 0px -8% 0px" });
+  $$(".rv").forEach(n => io.observe(n));
+
+  const thread = $("#thread");
+  const links  = $$(".nav a.lnk");
+  const secs   = ["about","work","stack","contact"].map(id => document.getElementById(id)).filter(Boolean);
+
+  let ticking = false;
+  const frame = () => {
+    ticking = false;
+    const y = scrollY;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    thread.style.width = (max > 0 ? (y/max)*100 : 0) + "%";
+    document.body.classList.toggle("deep", y > 60);
+
+    let cur = "";
+    secs.forEach(s => { if (s.getBoundingClientRect().top <= innerHeight*0.42) cur = s.id; });
+    links.forEach(l => l.classList.toggle("on", l.getAttribute("href") === "#"+cur));
+  };
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive:true });
+  frame();
+
+  /* counters */
+  const cio = new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (!e.isIntersecting) return;
+      cio.unobserve(e.target);
+      const node = e.target;
+      const to = +node.dataset.count;
+      const suffix = node.dataset.suffix || "";
+      if (REDUCED) { node.textContent = to + suffix; return; }
+      const t0 = performance.now(), dur = 1300;
+      let done = false;
+      (function tick(now){
+        const p = clamp((now-t0)/dur, 0, 1);
+        node.textContent = Math.round(to * (1 - Math.pow(1-p,3))) + suffix;
+        if (p < 1) requestAnimationFrame(tick); else done = true;
+      })(t0);
+      // If the frame loop stalls the count would sit on screen reading 0,
+      // which is worse than skipping the animation. Snap to the real figure.
+      setTimeout(() => { if (!done) node.textContent = to + suffix; }, dur + 900);
+    });
+  }, { threshold:.6 });
+  $$("[data-count]").forEach(n => cio.observe(n));
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+render();
+ambient();
+kinetic();
+pointer();
+rail();
+scrollFx();
+
+addEventListener("load", () => setTimeout(() => document.body.classList.add("up"), 220));
+// Never leave the curtain up if `load` already fired or a resource stalls.
+setTimeout(() => document.body.classList.add("up"), 2600);
+</script>
 </body>
 </html>
