@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Despi Demo Reel</title>
+<meta name="description" content="Five of Mj Despi's projects rebuilt as clickable front-end prototypes." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Archivo:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<style>
+/* ============================================================
+   DEMO REEL — matches the "low light" portfolio theme.
+   Dark stage, one brass accent, device frames at true logical
+   sizes so the prototypes read as builds, not screenshots.
+   ============================================================ */
+:root{
+  --void:#0A0D0C; --ground:#0E1312; --raise:#151D1A;
+  --edge:rgba(236,231,221,.10); --edge-lit:rgba(203,161,53,.34);
+  --paper:#ECE7DD; --paper-dim:rgba(236,231,221,.60); --paper-faint:rgba(236,231,221,.34);
+  --brass:#CBA135; --brass-lit:#E8C766; --brass-dim:rgba(203,161,53,.14);
+  --ice:#8FB8AD;
+  --display:'Bodoni Moda',Didot,Georgia,serif;
+  --body:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --gut:clamp(18px,4vw,56px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--void);color:var(--paper);
+  font-family:var(--body);font-weight:300;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;letter-spacing:-.015em;text-wrap:balance}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px;border-radius:3px}
+::selection{background:var(--brass);color:var(--void)}
+
+#glow{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(760px circle at 18% 8%,rgba(203,161,53,.10),transparent 60%),
+    radial-gradient(620px circle at 88% 42%,rgba(143,184,173,.06),transparent 62%);
+}
+.wrap{position:relative;z-index:1;max-width:1420px;margin:0 auto;padding-inline:var(--gut)}
+
+/* ---------- masthead ---------- */
+.mast{
+  padding-block:clamp(34px,6vh,64px) 26px;display:flex;flex-wrap:wrap;
+  gap:22px 34px;align-items:flex-end;justify-content:space-between;
+}
+.eyebrow{
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--brass);display:flex;align-items:center;gap:11px;margin-bottom:16px;
+}
+.eyebrow::before{content:'';width:30px;height:1px;background:var(--brass);opacity:.55}
+.mast h1{font-size:clamp(1.9rem,4.6vw,3.2rem);line-height:1.05}
+.mast h1 em{font-style:italic;color:var(--brass)}
+.mast__note{max-width:38ch;font-size:.86rem;line-height:1.7;color:var(--paper-dim)}
+.mast__note a{color:var(--brass);border-bottom:1px solid var(--edge-lit)}
+
+/* ---------- layout ---------- */
+.reel{display:grid;grid-template-columns:246px minmax(0,1fr);gap:clamp(22px,3vw,44px);align-items:start;padding-bottom:40px}
+
+/* ---------- rail ---------- */
+.rail{position:sticky;top:18px;display:flex;flex-direction:column;gap:2px}
+.rail__l{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--paper-faint);padding:0 14px 12px;
+}
+.pick{
+  display:grid;grid-template-columns:28px 1fr;gap:11px;align-items:baseline;
+  padding:13px 14px;border-radius:10px;text-align:left;width:100%;position:relative;
+  transition:background .3s var(--ease);
+}
+.pick::before{
+  content:'';position:absolute;left:0;top:13px;bottom:13px;width:2px;border-radius:2px;
+  background:var(--brass);transform:scaleY(0);transform-origin:center;transition:transform .35s var(--ease);
+}
+.pick:hover{background:var(--brass-dim)}
+.pick[aria-selected="true"]{background:var(--brass-dim)}
+.pick[aria-selected="true"]::before{transform:scaleY(1)}
+.pick__n{font-family:var(--mono);font-size:.6rem;color:var(--paper-faint);letter-spacing:.06em}
+.pick[aria-selected="true"] .pick__n{color:var(--brass)}
+.pick__name{font-size:.94rem;font-weight:400;line-height:1.3;display:block}
+.pick[aria-selected="true"] .pick__name{color:var(--brass)}
+.pick__kind{
+  display:block;font-family:var(--mono);font-size:.58rem;letter-spacing:.1em;
+  color:var(--paper-faint);margin-top:3px;
+}
+
+/* ---------- stage ---------- */
+.stage{min-width:0;display:flex;flex-direction:column;gap:18px}
+.slate{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:flex-end;justify-content:space-between}
+.slate h2{font-size:clamp(1.5rem,2.8vw,2.05rem);line-height:1.12}
+.slate__sub{font-size:.88rem;line-height:1.7;color:var(--paper-dim);max-width:62ch;margin-top:7px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{
+  font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;padding:4.5px 10px;
+  border-radius:99px;border:1px solid var(--edge);color:var(--paper-faint);white-space:nowrap;
+}
+.chip--live{border-color:var(--edge-lit);color:var(--brass)}
+.chip--live::before{
+  content:'';display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--brass);margin-right:7px;vertical-align:1px;
+}
+
+/* ---------- viewport toggle ---------- */
+.bar{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+  padding:10px 12px;border:1px solid var(--edge);border-radius:12px;background:var(--ground);
+}
+.seg{display:flex;gap:3px;padding:3px;border-radius:99px;background:rgba(0,0,0,.34)}
+.seg button{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 17px;border-radius:99px;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--paper-faint);transition:background .3s var(--ease),color .3s var(--ease);
+}
+.seg button:hover{color:var(--paper)}
+.seg button[aria-pressed="true"]{background:var(--brass);color:var(--void);font-weight:500}
+.seg svg{width:13px;height:13px;flex:none}
+.dims{
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--paper-faint);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.dims b{color:var(--ice);font-weight:400}
+
+/* ---------- device ---------- */
+.deck{display:flex;justify-content:center;padding-block:6px 2px}
+.fit{transform-origin:top center}
+
+/* desktop chrome */
+.dev--desktop{
+  width:1280px;border:1px solid var(--edge);border-radius:12px;overflow:hidden;
+  background:var(--ground);box-shadow:0 50px 120px -50px rgba(0,0,0,.95);
+}
+.chrome{
+  display:flex;align-items:center;gap:9px;padding:11px 15px;
+  background:#111614;border-bottom:1px solid var(--edge);
+}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--paper-faint);opacity:.34}
+.chrome span{
+  flex:1;text-align:center;font-family:var(--mono);font-size:.62rem;
+  color:var(--paper-faint);letter-spacing:.06em;
+}
+
+/* iPhone 16 Pro Max — 440 x 956 logical */
+.dev--phone{
+  width:464px;padding:12px;border-radius:68px;background:#0B0B0C;
+  box-shadow:0 0 0 2px #2A2B2E,0 0 0 4px #121314,0 50px 120px -46px rgba(0,0,0,.95);
+  position:relative;
+}
+.dev--phone::before,.dev--phone::after{
+  content:'';position:absolute;left:-5px;width:3px;border-radius:3px;background:#2A2B2E;
+}
+.dev--phone::before{top:186px;height:62px}
+.dev--phone::after{top:262px;height:62px}
+.btn-pwr{position:absolute;right:-5px;top:214px;width:3px;height:96px;border-radius:3px;background:#2A2B2E}
+.island{
+  position:absolute;top:24px;left:50%;transform:translateX(-50%);
+  width:124px;height:35px;border-radius:99px;background:#000;z-index:6;pointer-events:none;
+}
+.indicator{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  width:142px;height:5px;border-radius:99px;background:rgba(255,255,255,.30);z-index:6;pointer-events:none;
+}
+
+.screen{overflow:hidden;background:#fff;position:relative}
+.dev--desktop .screen{width:1280px;height:820px}
+.dev--phone   .screen{width:440px;height:956px;border-radius:56px}
+
+.hint{
+  display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;text-align:center;
+  font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;color:var(--paper-faint);
+}
+.hint kbd{border:1px solid var(--edge);border-radius:4px;padding:2px 6px;color:var(--paper-dim)}
+
+.foot{
+  border-top:1px solid var(--edge);margin-top:14px;
+  padding-block:24px calc(40px + env(safe-area-inset-bottom,0px));
+  display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--paper-faint);
+}
+.foot a{color:var(--brass)}
+
+@media (max-width:1040px){
+  .reel{grid-template-columns:1fr;gap:16px}
+  .rail{position:static;flex-direction:row;gap:7px;overflow-x:auto;padding-bottom:6px}
+  .rail__l{display:none}
+  /* the wide rule sets width:100%; without resetting it here every pill
+     stretches to the full rail and only one is visible at a time */
+  .pick{grid-template-columns:auto;gap:0;flex:0 0 auto;width:auto;padding:9px 16px;border:1px solid var(--edge);border-radius:99px}
+  .pick::before{display:none}
+  .pick[aria-selected="true"]{border-color:var(--brass)}
+  .pick__n{display:none}
+  .pick__name{font-size:.8rem;white-space:nowrap}
+  .pick__kind{display:none}
+}
+
+/* ============================================================
+   APP KIT — primitives every prototype is built from.
+   Each product sets its own palette on .app; the kit only
+   supplies rhythm, weight and state.
+   ============================================================ */
+.app{
+  --a:#16855C; --a-soft:rgba(22,133,92,.13);
+  --bg:#fff; --surf:#fff; --sunk:#F5F7F6;
+  --fg:#0D1512; --mut:#6A7A74; --ln:#E6EAE8;
+  --ok:#17875A; --warn:#B07A14; --bad:#B4352A;
+  --r:14px;
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  background:var(--bg);color:var(--fg);
+  font-family:var(--body);font-weight:400;font-size:14px;line-height:1.5;
+  overflow:hidden;
+}
+.app *{box-sizing:border-box}
+.app button{font:inherit;color:inherit}
+.app ::-webkit-scrollbar{width:0;height:0}
+
+/* status bar (phone only) */
+.sbar{
+  display:none;align-items:center;justify-content:space-between;
+  padding:17px 30px 4px;font-size:14px;font-weight:600;letter-spacing:-.01em;flex:none;
+}
+.app.narrow .sbar{display:flex}
+.sbar__r{display:flex;align-items:center;gap:5px}
+.sbar__r i{display:block;width:17px;height:10px;border:1.4px solid currentColor;border-radius:3px;position:relative;opacity:.9}
+.sbar__r i::after{content:'';position:absolute;inset:1.6px;background:currentColor;border-radius:1px}
+
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.pad{padding:18px 20px 26px;display:flex;flex-direction:column;gap:18px}
+.app.wide .pad{padding:26px 34px 34px;gap:22px}
+
+.eyeb{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:500}
+.ttl{font-size:19px;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+.app.wide .ttl{font-size:23px}
+.sub{font-size:12.5px;color:var(--mut);line-height:1.55}
+
+.card{background:var(--surf);border:1px solid var(--ln);border-radius:var(--r);padding:16px;min-width:0}
+.card--sunk{background:var(--sunk);border-color:transparent}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.hd h4{margin:0;font-size:13.5px;font-weight:700;letter-spacing:-.015em}
+
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.app.narrow .g3,.app.narrow .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+.row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--ln);min-width:0}
+.row:last-child{border-bottom:0}
+.row__m{flex:1;min-width:0}
+.row__t{font-size:13.5px;font-weight:500;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row__s{font-size:11.5px;color:var(--mut);margin-top:2px}
+.amt{font-variant-numeric:tabular-nums;font-weight:600;font-size:13.5px;white-space:nowrap;letter-spacing:-.02em}
+.neg{color:var(--bad)}.pos{color:var(--ok)}
+
+.ico{
+  width:38px;height:38px;border-radius:12px;flex:none;display:grid;place-items:center;
+  background:var(--sunk);font-size:15px;
+}
+.app.narrow .ico{width:40px;height:40px}
+
+.pill{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:3.5px 8px;border-radius:99px;border:1px solid var(--ln);color:var(--mut);white-space:nowrap;font-weight:500;
+}
+.pill--a{border-color:var(--a);color:var(--a);background:var(--a-soft)}
+.pill--ok{border-color:var(--ok);color:var(--ok);background:rgba(23,135,90,.1)}
+.pill--warn{border-color:var(--warn);color:var(--warn);background:rgba(176,122,20,.11)}
+.pill--bad{border-color:var(--bad);color:var(--bad);background:rgba(180,53,42,.1)}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 17px;border-radius:12px;background:var(--a);color:#fff;
+  font-size:13px;font-weight:600;letter-spacing:-.01em;transition:filter .2s,transform .12s;
+}
+.btn:hover{filter:brightness(1.09)}
+.btn:active{transform:scale(.982)}
+.btn[disabled]{opacity:.42;cursor:not-allowed}
+.btn--q{background:transparent;color:var(--fg);border:1px solid var(--ln)}
+.btn--q:hover{background:var(--sunk);filter:none}
+.btn--sm{padding:7px 12px;font-size:11.5px;border-radius:9px}
+.btn--wide{width:100%}
+
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld label{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:500}
+.fld input,.fld select{
+  font:inherit;font-size:14px;padding:11px 13px;border:1px solid var(--ln);border-radius:11px;
+  background:var(--bg);color:var(--fg);width:100%;min-width:0;
+}
+.fld input:focus,.fld select:focus{outline:2px solid var(--a);outline-offset:-1px;border-color:transparent}
+
+.meter{height:6px;border-radius:99px;background:var(--ln);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--a);border-radius:99px;transition:width .7s var(--ease)}
+
+.empty{text-align:center;color:var(--mut);font-size:12.5px;padding:34px 16px;line-height:1.7}
+
+/* bottom tab bar — phone */
+.tabbar{
+  display:none;flex:none;align-items:stretch;gap:2px;padding:9px 12px 30px;
+  border-top:1px solid var(--ln);background:var(--surf);
+}
+.app.narrow .tabbar{display:flex}
+.tabbar button{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;
+  font-size:9.5px;font-weight:600;letter-spacing:.02em;color:var(--mut);border-radius:10px;transition:color .2s;
+}
+.tabbar button svg{width:21px;height:21px}
+.tabbar button[aria-current="true"]{color:var(--a)}
+
+/* side nav — desktop */
+.side{display:none;flex:none;width:224px;border-right:1px solid var(--ln);background:var(--surf);padding:20px 14px;flex-direction:column;gap:5px}
+.app.wide .side{display:flex}
+.side__brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14.5px;letter-spacing:-.02em;padding:4px 10px 18px}
+.side button{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:11px;
+  font-size:13px;font-weight:500;color:var(--mut);text-align:left;transition:background .2s,color .2s;
+}
+.side button svg{width:18px;height:18px;flex:none}
+.side button:hover{background:var(--sunk);color:var(--fg)}
+.side button[aria-current="true"]{background:var(--a);color:#fff}
+.glyph{width:30px;height:30px;border-radius:9px;background:var(--a);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:700;flex:none}
+
+.shellrow{display:flex;flex:1;min-height:0}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+
+/* top bar — desktop */
+.top{display:none;align-items:center;gap:14px;padding:16px 34px;border-bottom:1px solid var(--ln);flex:none}
+.app.wide .top{display:flex}
+.top__t{font-size:17px;font-weight:700;letter-spacing:-.025em}
+.sp{flex:1}
+.who{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--mut)}
+.av{width:30px;height:30px;border-radius:50%;background:var(--a);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700}
+
+/* sheet */
+.sheet{
+  position:absolute;inset:0;z-index:30;display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(4,10,8,.52);opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
+}
+.app.wide .sheet{align-items:center}
+.sheet.on{opacity:1;pointer-events:auto}
+.sheet__p{
+  width:100%;max-height:82%;overflow-y:auto;background:var(--surf);
+  border-radius:24px 24px 0 0;padding:20px 20px 30px;
+  transform:translateY(100%);transition:transform .38s var(--ease);
+  display:flex;flex-direction:column;gap:15px;
+}
+.app.wide .sheet__p{max-width:460px;border-radius:18px;transform:translateY(16px) scale(.97);padding:24px}
+.sheet.on .sheet__p{transform:none}
+.grip{width:38px;height:4px;border-radius:99px;background:var(--ln);margin:-6px auto 2px}
+.app.wide .grip{display:none}
+
+.toast{
+  position:absolute;left:50%;bottom:104px;transform:translate(-50%,12px);z-index:40;
+  background:var(--fg);color:var(--bg);font-size:12px;font-weight:600;letter-spacing:-.01em;
+  padding:11px 18px;border-radius:99px;opacity:0;pointer-events:none;max-width:86%;text-align:center;
+  transition:opacity .28s var(--ease),transform .28s var(--ease);box-shadow:0 18px 40px -16px rgba(0,0,0,.6);
+}
+.app.wide .toast{bottom:32px}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.rise{animation:rise .34s var(--ease) both}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div id="glow" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div>
+      <span class="eyebrow">Mj Despi · Working prototypes</span>
+      <h1>Click around.<br><em>These actually run.</em></h1>
+    </div>
+    <p class="mast__note">
+      Five projects rebuilt as front-end prototypes, so you can use them instead of
+      reading about them. Sample data only — nothing is saved or sent anywhere.
+      Back to <a href="premium.html">the portfolio</a>.
+    </p>
+  </header>
+
+  <div class="reel">
+    <nav class="rail" id="rail" role="tablist" aria-label="Projects"></nav>
+
+    <div class="stage">
+      <div class="slate">
+        <div>
+          <h2 id="p-name"></h2>
+          <p class="slate__sub" id="p-sub"></p>
+        </div>
+        <div class="chips" id="p-chips"></div>
+      </div>
+
+      <div class="bar">
+        <div class="seg" role="group" aria-label="Viewport size">
+          <button id="to-phone" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18.5h2"/>
+            </svg>Mobile
+          </button>
+          <button id="to-desk" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/>
+            </svg>Web
+          </button>
+        </div>
+        <p class="dims" id="dims"></p>
+      </div>
+
+      <div class="deck">
+        <div class="fit" id="fit">
+          <div id="device">
+            <div id="chrome-slot"></div>
+            <div class="screen" id="screen" role="tabpanel" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="hint" id="hint"></p>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span>Front-end only · real builds use Laravel, PHP, MySQL, Android and n8n</span>
+    <span><a href="https://github.com/mjdsp">github.com/mjdsp</a></span>
+  </footer>
+
+</div>
+
+<script>
+/* ============================================================
+   helpers
+   ============================================================ */
+const el = (t,c,h) => { const n=document.createElement(t); if(c) n.className=c; if(h!=null) n.innerHTML=h; return n; };
+const peso = n => "₱" + Math.abs(n).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const pesoK = n => { const a=Math.abs(n); return "₱" + (a>=1000 ? (a/1000).toFixed(1).replace(/\.0$/,"")+"k" : a.toFixed(0)); };
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function toast(root,msg){
+  // Mount inside .app, not on the screen shell: the toast is painted from
+  // --fg / --bg, and those are declared on .app. Parented any higher the
+  // pill resolves to a transparent background and borrows the page's text
+  // colour, which is invisible against a light product UI.
+  const host = root.querySelector(".app") || root;
+  let t = host.querySelector(":scope > .toast");
+  if(!t){ t = el("div","toast"); host.appendChild(t); }
+  t.textContent = msg;
+  requestAnimationFrame(()=>t.classList.add("on"));
+  clearTimeout(t._x);
+  t._x = setTimeout(()=>t.classList.remove("on"),2300);
+}
+
+const ICONS = {
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.8V21h14V9.8"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  receipt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l2.5-1.6L10 21l2-1.6L14 21l2.5-1.6L19 21V3z"/><path d="M9 8h6M9 12h6"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  scan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M7 12h10"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 10.1z"/></svg>',
+  bell:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M18 8.5a6 6 0 1 0-12 0c0 6-2 7.5-2 7.5h16s-2-1.5-2-7.5"/><path d="M10.5 20a2 2 0 0 0 3 0"/></svg>',
+};
+
+function statusBar(tone){
+  return `<div class="sbar" style="color:${tone}">
+    <span>9:41</span>
+    <span class="sbar__r">
+      <svg viewBox="0 0 20 12" width="17" height="11" fill="currentColor" aria-hidden="true"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.6" y="5" width="3" height="7" rx="1"/><rect x="9.2" y="2.6" width="3" height="9.4" rx="1"/><rect x="13.8" y="0" width="3" height="12" rx="1" opacity=".38"/></svg>
+      <svg viewBox="0 0 16 12" width="15" height="11" fill="currentColor" aria-hidden="true"><path d="M8 11.2 1 4.6a9.8 9.8 0 0 1 14 0z" opacity=".95"/></svg>
+      <i></i>
+    </span>
+  </div>`;
+}
+
+/* ============================================================
+   1 · MANAGE MY MONEY — mobile-first
+   Laravel 12 + Inertia + React + TypeScript + shadcn/ui.
+   Schema mirrors the real repo: accounts (monthly_interest_rate,
+   repayment_plan, borrowed_on), transactions, scheduled
+   transactions (auto_post), reimbursements (items, photos).
+   ============================================================ */
+function demoMoney(root, mode){
+  const S = {
+    tab:"Home", acc:0, sheet:false,
+    accounts:[
+      { id:1, n:"BPI Savings",      k:"asset", bal:84210.55, tint:"#16855C", last:"7842" },
+      { id:2, n:"GCash",            k:"asset", bal:6420.00,  tint:"#1F6FB5", last:"0224" },
+      { id:3, n:"Cash on hand",     k:"asset", bal:3150.00,  tint:"#7A6A3E", last:"—" },
+      { id:4, n:"Home Credit loan", k:"debt",  bal:-18400.00, tint:"#B4352A", rate:1.75, plan:12, since:"14 Mar 2026" },
+    ],
+    cats:["Groceries","Transport","Utilities","Food & drink","Subscriptions","Salary","Freelance"],
+    tx:[
+      { d:"27 Sep", n:"Landers Superstore", c:"Groceries",     a:-2840.75, acc:1, g:"\u{1F6D2}" },
+      { d:"26 Sep", n:"Grab · Ortigas", c:"Transport",    a:-318.00,  acc:2, g:"\u{1F697}" },
+      { d:"25 Sep", n:"Freelance retainer", c:"Freelance",     a:25000.00, acc:1, g:"\u{1F4BC}" },
+      { d:"24 Sep", n:"Meralco",           c:"Utilities",      a:-3410.20, acc:1, g:"⚡" },
+      { d:"23 Sep", n:"Jollibee",          c:"Food & drink",   a:-285.00,  acc:3, g:"\u{1F35F}" },
+      { d:"21 Sep", n:"Spotify Duo",       c:"Subscriptions",  a:-194.00,  acc:2, g:"\u{1F3A7}" },
+    ],
+    sched:[
+      { id:1, n:"Meralco",        c:"Utilities",    a:-3410.20, due:"04 Oct", auto:true,  done:false },
+      { id:2, n:"Home Credit",    c:"Loan payment", a:-1720.00, due:"07 Oct", auto:true,  done:false },
+      { id:3, n:"Globe postpaid", c:"Utilities",    a:-1299.00, due:"12 Oct", auto:false, done:false },
+      { id:4, n:"Salary",         c:"Salary",       a:42000.00, due:"15 Oct", auto:true,  done:false },
+    ],
+    claim:{
+      ref:"RB-2026-018", title:"Client visit · Cebu", status:"draft",
+      items:[
+        { n:"Airfare · MNL→CEB", q:1, u:4380.00 },
+        { n:"Hotel · 2 nights",       q:2, u:2150.00 },
+        { n:"Grab receipts",               q:6, u:185.00  },
+      ],
+      photos:[],
+    },
+  };
+
+  const app = el("div","app " + (mode==="phone" ? "narrow" : "wide"));
+  app.style.setProperty("--a","#16855C");
+  app.style.setProperty("--a-soft","rgba(22,133,92,.13)");
+  app.style.setProperty("--bg","#FBFCFB");
+  app.style.setProperty("--surf","#FFFFFF");
+  app.style.setProperty("--sunk","#F2F5F3");
+  app.style.setProperty("--fg","#0C1411");
+  app.style.setProperty("--mut","#6B7B75");
+  app.style.setProperty("--ln","#E5EAE7");
+
+  const TABS = [
+    ["Home","home"], ["Activity","list"], ["Schedule","clock"], ["Claims","receipt"],
+  ];
+
+  app.innerHTML =
+    statusBar("#0C1411") +
+    `<div class="shellrow">
+       <nav class="side">
+         <div class="side__brand"><span class="glyph">₱</span>Manage My Money</div>
+       </nav>
+       <div class="main">
+         <div class="top"><span class="top__t" id="mm-top"></span><span class="sp"></span>
+           <span class="who"><span class="av">M</span>Mj Despi</span></div>
+         <div class="scroll"><div class="pad" id="mm-body"></div></div>
+       </div>
+     </div>
+     <nav class="tabbar"></nav>
+     <div class="sheet" id="mm-sheet"><div class="sheet__p" id="mm-sheetp"></div></div>`;
+
+  const body  = app.querySelector("#mm-body");
+  const bar   = app.querySelector(".tabbar");
+  const side  = app.querySelector(".side");
+  const sheet = app.querySelector("#mm-sheet");
+  const sheetP= app.querySelector("#mm-sheetp");
+
+  TABS.forEach(([name,icon]) => {
+    const b = el("button",null,`${ICONS[icon]}<span>${name}</span>`);
+    b.onclick = () => { S.tab = name; draw(); };
+    bar.appendChild(b);
+    const s = el("button",null,`${ICONS[icon]}<span>${name}</span>`);
+    s.onclick = () => { S.tab = name; draw(); };
+    side.appendChild(s);
+  });
+
+  const assets = () => S.accounts.filter(a=>a.k==="asset").reduce((s,a)=>s+a.bal,0);
+  const debts  = () => S.accounts.filter(a=>a.k==="debt").reduce((s,a)=>s+a.bal,0);
+  const net    = () => assets() + debts();
+  const outAmt = () => S.tx.filter(t=>t.a<0).reduce((s,t)=>s+t.a,0);
+  const inAmt  = () => S.tx.filter(t=>t.a>0).reduce((s,t)=>s+t.a,0);
+
+  function ring(){
+    const byCat = {};
+    S.tx.filter(t=>t.a<0).forEach(t => byCat[t.c] = (byCat[t.c]||0) + Math.abs(t.a));
+    const rows = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+    const total = rows.reduce((s,r)=>s+r[1],0);
+    const tints = ["#16855C","#2E9E77","#5BB894","#8FCFB4","#BEE3D3","#DCF0E7"];
+    const R = 52, C = 2*Math.PI*R;
+    let off = 0;
+    const arcs = rows.map(([c,v],i) => {
+      const frac = v/total, len = C*frac;
+      const seg = `<circle cx="70" cy="70" r="${R}" fill="none" stroke="${tints[i%tints.length]}"
+        stroke-width="17" stroke-linecap="butt"
+        stroke-dasharray="${(len-2.5).toFixed(2)} ${(C-len+2.5).toFixed(2)}"
+        stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 70 70)"/>`;
+      off += len;
+      return seg;
+    }).join("");
+    const legend = rows.map(([c,v],i) =>
+      `<div class="row" style="padding:7px 0">
+         <span style="width:9px;height:9px;border-radius:3px;background:${tints[i%tints.length]};flex:none"></span>
+         <div class="row__m"><div class="row__t" style="font-weight:400;font-size:12.5px">${esc(c)}</div></div>
+         <span class="amt" style="font-size:12.5px">${peso(v)}</span>
+         <span class="pill">${Math.round(v/total*100)}%</span>
+       </div>`).join("");
+    return `<div class="card">
+        <div class="hd"><h4>Where it went</h4><span class="pill">September</span></div>
+        <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <svg viewBox="0 0 140 140" style="width:140px;height:140px;flex:none" aria-hidden="true">
+            ${arcs}
+            <text x="70" y="65" text-anchor="middle" font-size="10" fill="var(--mut)"
+                  font-family="var(--mono)" letter-spacing="1.4">SPENT</text>
+            <text x="70" y="85" text-anchor="middle" font-size="18" font-weight="700"
+                  fill="var(--fg)" letter-spacing="-.5">${pesoK(total)}</text>
+          </svg>
+          <div style="flex:1;min-width:190px">${legend}</div>
+        </div>
+      </div>`;
+  }
+
+  function openSheet(){
+    S.sheet = true;
+    sheetP.innerHTML =
+      `<div class="grip"></div>
+       <div><div class="ttl">Record a transaction</div>
+         <p class="sub" style="margin-top:3px">It posts to the selected account straight away.</p></div>
+       <div class="fld"><label for="mm-n">Description</label><input id="mm-n" placeholder="e.g. SM Supermarket"></div>
+       <div class="grid g2">
+         <div class="fld"><label for="mm-a">Amount</label><input id="mm-a" type="number" inputmode="decimal" step="0.01" placeholder="0.00"></div>
+         <div class="fld"><label for="mm-c">Category</label><select id="mm-c">${S.cats.map(c=>`<option>${esc(c)}</option>`).join("")}</select></div>
+       </div>
+       <div class="fld"><label for="mm-acc">Account</label>
+         <select id="mm-acc">${S.accounts.map(a=>`<option value="${a.id}">${esc(a.n)}</option>`).join("")}</select></div>
+       <div class="grid g2" style="margin-top:2px">
+         <button class="btn" id="mm-exp">Add expense</button>
+         <button class="btn btn--q" id="mm-inc">Add income</button>
+       </div>
+       <button class="btn btn--q btn--wide" id="mm-x">Cancel</button>`;
+    sheet.classList.add("on");
+
+    const add = sign => {
+      const n = sheetP.querySelector("#mm-n").value.trim();
+      const raw = parseFloat(sheetP.querySelector("#mm-a").value);
+      if(!n || !raw || raw <= 0){ toast(root,"Add a description and a positive amount"); return; }
+      const id = +sheetP.querySelector("#mm-acc").value;
+      const acct = S.accounts.find(a=>a.id===id);
+      S.tx.unshift({ d:"29 Sep", n, c:sheetP.querySelector("#mm-c").value, a:sign*raw, acc:id, g:sign<0?"\u{1F4B8}":"\u{1F4B0}" });
+      acct.bal += sign*raw;
+      closeSheet();
+      toast(root,(sign<0?"Expense":"Income")+" recorded · "+acct.n);
+      draw();
+    };
+    sheetP.querySelector("#mm-exp").onclick = () => add(-1);
+    sheetP.querySelector("#mm-inc").onclick = () => add(1);
+    sheetP.querySelector("#mm-x").onclick = closeSheet;
+  }
+  function closeSheet(){ S.sheet=false; sheet.classList.remove("on"); }
+  sheet.onclick = e => { if(e.target===sheet) closeSheet(); };
+
+  function draw(){
+    [...bar.children].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    [...side.querySelectorAll("button")].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    app.querySelector("#mm-top").textContent = S.tab;
+    body.innerHTML = "";
+    body.classList.add("rise");
+    setTimeout(()=>body.classList.remove("rise"),380);
+
+    if(S.tab === "Home"){
+      const a = S.accounts[S.acc];
+      const hero = el("div","");
+      hero.style.cssText =
+        `border-radius:20px;padding:20px;color:#fff;position:relative;overflow:hidden;
+         background:linear-gradient(140deg,${a.tint},#0C1411 118%);
+         box-shadow:0 20px 44px -22px ${a.tint}`;
+      hero.innerHTML =
+        `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+           <div>
+             <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.74">${esc(a.n)}</div>
+             <div style="font-size:31px;font-weight:700;letter-spacing:-.035em;margin-top:6px;font-variant-numeric:tabular-nums">
+               ${a.bal<0?"-":""}${peso(a.bal)}</div>
+             <div style="font-size:11.5px;opacity:.78;margin-top:4px">
+               ${a.k==="debt" ? `${a.rate}% monthly · ${a.plan}-month plan · since ${esc(a.since)}` : `•••• ${esc(a.last)}`}</div>
+           </div>
+           <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-align:right;opacity:.8">
+             NET WORTH<br><b style="font-size:14px;letter-spacing:-.02em">${pesoK(net())}</b></div>
+         </div>`;
+      body.appendChild(hero);
+
+      const chips = el("div","");
+      chips.style.cssText = "display:flex;gap:8px;overflow-x:auto;padding-bottom:2px";
+      S.accounts.forEach((acc,i) => {
+        const b = el("button",null,
+          `<span style="display:block;font-size:11.5px;font-weight:600">${esc(acc.n)}</span>
+           <span style="display:block;font-size:11px;opacity:.72;font-variant-numeric:tabular-nums;margin-top:2px">${acc.bal<0?"-":""}${pesoK(acc.bal)}</span>`);
+        const on = i===S.acc;
+        b.style.cssText =
+          `flex:0 0 auto;padding:9px 14px;border-radius:12px;text-align:left;transition:.2s;
+           border:1px solid ${on?acc.tint:"var(--ln)"};background:${on?acc.tint:"transparent"};color:${on?"#fff":"var(--fg)"}`;
+        b.onclick = () => { S.acc=i; draw(); };
+        chips.appendChild(b);
+      });
+      body.appendChild(chips);
+
+      const acts = el("div","grid g4");
+      [["plus","Add",()=>openSheet()],
+       ["send","Transfer",()=>toast(root,"Transfers move between your own accounts")],
+       ["scan","Scan",()=>{ S.tab="Claims"; draw(); }],
+       ["chart","Reports",()=>toast(root,"reports/monthly.pdf renders server-side")]
+      ].forEach(([ic,label,fn])=>{
+        const b = el("button","card card--sunk",
+          `<span style="display:grid;place-items:center;gap:7px">
+             <span style="width:22px;height:22px;color:var(--a);display:block">${ICONS[ic]}</span>
+             <span style="font-size:11px;font-weight:600">${label}</span></span>`);
+        b.style.cssText = "padding:13px 8px;cursor:pointer";
+        b.onclick = fn;
+        acts.appendChild(b);
+      });
+      body.appendChild(acts);
+
+      const k = el("div","grid g2");
+      [["Money in",peso(inAmt()),"September","pos"],
+       ["Money out",peso(outAmt()),"September","neg"]].forEach(([l,v,s,cls])=>{
+        k.appendChild(el("div","card card--sunk",
+          `<div class="eyeb">${l}</div>
+           <div class="amt ${cls}" style="font-size:18px;margin-top:6px">${v}</div>
+           <div class="sub" style="font-size:11px;margin-top:2px">${s}</div>`));
+      });
+      body.appendChild(k);
+
+      body.appendChild(el("div","",ring()));
+
+      const rec = el("div","card");
+      rec.appendChild(el("div","hd",`<h4>Recent</h4><span class="pill">${S.tx.length} entries</span>`));
+      S.tx.slice(0,5).forEach(t=>{
+        const acct = S.accounts.find(x=>x.id===t.acc);
+        rec.appendChild(el("div","row",
+          `<span class="ico">${t.g}</span>
+           <div class="row__m"><div class="row__t">${esc(t.n)}</div>
+             <div class="row__s">${esc(t.d)} · ${esc(t.c)} · ${esc(acct?acct.n:"")}</div></div>
+           <span class="amt ${t.a<0?"neg":"pos"}">${t.a<0?"-":"+"}${peso(t.a)}</span>`));
+      });
+      body.appendChild(rec);
+    }
+
+    if(S.tab === "Activity"){
+      const add = el("button","btn btn--wide",`<span style="width:16px;height:16px;display:block">${ICONS.plus}</span>Record a transaction`);
+      add.onclick = openSheet;
+      body.appendChild(add);
+
+      const list = el("div","card");
+      list.appendChild(el("div","hd",`<h4>All transactions</h4><span class="pill">${S.tx.length}</span>`));
+      S.tx.forEach(t=>{
+        const acct = S.accounts.find(x=>x.id===t.acc);
+        list.appendChild(el("div","row",
+          `<span class="ico">${t.g}</span>
+           <div class="row__m"><div class="row__t">${esc(t.n)}</div>
+             <div class="row__s">${esc(t.d)} · ${esc(t.c)} · ${esc(acct?acct.n:"")}</div></div>
+           <span class="amt ${t.a<0?"neg":"pos"}">${t.a<0?"-":"+"}${peso(t.a)}</span>`));
+      });
+      body.appendChild(list);
+    }
+
+    if(S.tab === "Schedule"){
+      const c = el("div","card");
+      const autos = S.sched.filter(s=>s.auto).length;
+      c.appendChild(el("div","hd",`<h4>Scheduled</h4><span class="pill pill--a">auto_post on ${autos}</span>`));
+      S.sched.forEach(s=>{
+        const r = el("div","row");
+        r.innerHTML =
+          `<span class="ico">${s.a<0?"\u{1F4C6}":"\u{1F4B0}"}</span>
+           <div class="row__m">
+             <div class="row__t">${esc(s.n)} ${s.auto?'<span class="pill pill--a" style="margin-left:5px">auto</span>':""}</div>
+             <div class="row__s">Due ${esc(s.due)} · ${esc(s.c)}</div></div>
+           <span class="amt ${s.a<0?"neg":"pos"}">${s.a<0?"-":"+"}${peso(s.a)}</span>`;
+        if(s.done){ r.appendChild(el("span","pill pill--ok","posted")); }
+        else{
+          const g = el("div",""); g.style.cssText="display:flex;gap:6px";
+          const post = el("button","btn btn--sm","Post");
+          const skip = el("button","btn btn--q btn--sm","Skip");
+          post.onclick = () => {
+            s.done = true;
+            S.tx.unshift({ d:"29 Sep", n:s.n, c:s.c, a:s.a, acc:1, g:"\u{1F4C6}" });
+            S.accounts[0].bal += s.a;
+            toast(root,s.n+" posted to BPI Savings"); draw();
+          };
+          skip.onclick = () => { s.done=true; toast(root,s.n+" skipped this cycle"); draw(); };
+          g.append(post,skip); r.appendChild(g);
+        }
+        c.appendChild(r);
+      });
+      body.appendChild(c);
+    }
+
+    if(S.tab === "Claims"){
+      const R = S.claim;
+      const total = R.items.reduce((s,i)=>s+i.q*i.u,0);
+      const c = el("div","card");
+      c.appendChild(el("div","hd",
+        `<div><h4>${esc(R.ref)}</h4><div class="sub" style="font-size:11.5px">${esc(R.title)}</div></div>
+         <span class="pill ${R.status==="submitted"?"pill--ok":"pill--warn"}">${esc(R.status)}</span>`));
+      R.items.forEach(i=>{
+        c.appendChild(el("div","row",
+          `<div class="row__m"><div class="row__t">${esc(i.n)}</div>
+             <div class="row__s">${i.q} × ${peso(i.u)}</div></div>
+           <span class="amt">${peso(i.q*i.u)}</span>`));
+      });
+      c.appendChild(el("div","row",
+        `<div class="row__m"><div class="row__t">Total claim</div></div>
+         <span class="amt" style="font-size:17px">${peso(total)}</span>`));
+      body.appendChild(c);
+
+      const ph = el("div","card");
+      ph.appendChild(el("div","hd",`<h4>Receipt photos</h4><span class="pill">${R.photos.length} attached</span>`));
+      if(!R.photos.length){
+        ph.appendChild(el("div","empty","No receipts yet.<br>Attach one and run extraction."));
+      } else {
+        R.photos.forEach(p=>{
+          const r = el("div","row");
+          r.innerHTML =
+            `<span class="ico">\u{1F9FE}</span>
+             <div class="row__m"><div class="row__t">${esc(p.f)}</div>
+               <div class="row__s">${p.done?"Extracted · "+esc(p.v):"Waiting for extraction"}</div></div>`;
+          if(!p.done){
+            const b = el("button","btn btn--sm","Extract");
+            b.onclick = () => {
+              b.disabled = true; b.textContent = "Reading…";
+              setTimeout(()=>{
+                p.done = true;
+                p.v = "Shell Ortigas · "+peso(p.amt);
+                R.items.push({ n:"Fuel · Shell Ortigas", q:1, u:p.amt });
+                toast(root,"Line item added from receipt"); draw();
+              },1100);
+            };
+            r.appendChild(b);
+          } else r.appendChild(el("span","pill pill--ok","ok"));
+          ph.appendChild(r);
+        });
+      }
+      const g = el("div","grid g2"); g.style.marginTop = "13px";
+      const att = el("button","btn btn--q btn--sm","Attach receipt");
+      att.onclick = () => {
+        R.photos.push({ f:"receipt-"+(R.photos.length+1)+".jpg", done:false, amt:1250+R.photos.length*310 });
+        draw();
+      };
+      const sub = el("button","btn btn--sm",R.status==="submitted"?"Submitted":"Submit claim");
+      sub.disabled = R.status==="submitted";
+      sub.onclick = () => { R.status="submitted"; toast(root,"Claim "+R.ref+" submitted"); draw(); };
+      g.append(att,sub); ph.appendChild(g);
+      body.appendChild(ph);
+    }
+  }
+
+  draw();
+  root.appendChild(app);
+}
+
+/* ============================================================
+   2 · QUIZMETRIX
+   ============================================================ */
+function demoQuiz(root, mode){
+  const deck = [
+    { f:"Big-O of binary search", b:"O(log n) — the search space halves each step" },
+    { f:"Stack vs queue", b:"Stack is LIFO, queue is FIFO" },
+    { f:"What makes a hash collision", b:"Two distinct keys hashing to the same bucket index" },
+    { f:"Why normalise a database", b:"To remove redundancy so one fact is stored in one place" },
+  ];
+  const quiz = [
+    { q:"Which structure gives O(1) average lookup by key?", o:["Linked list","Hash table","Binary tree","Array"], a:1 },
+    { q:"In SQL, which clause filters rows after GROUP BY?", o:["WHERE","ORDER BY","HAVING","LIMIT"], a:2 },
+    { q:"A primary key must be", o:["Unique and not null","Always an integer","Auto-increment","Indexed last"], a:0 },
+    { q:"Which HTTP status means the resource was created?", o:["200","201","204","302"], a:1 },
+    { q:"Normalising to 3NF removes", o:["All joins","Transitive dependencies","Foreign keys","Indexes"], a:1 },
+  ];
+  const S = { tab:"Sets", card:0, flip:false, qi:0, picked:null, score:0, done:false, ans:[] };
+
+  const app = el("div","app " + (mode==="phone"?"narrow":"wide"));
+  app.style.setProperty("--a","#4C56C8");
+  app.style.setProperty("--a-soft","rgba(76,86,200,.12)");
+  app.style.setProperty("--bg","#FBFBFE"); app.style.setProperty("--surf","#FFFFFF");
+  app.style.setProperty("--sunk","#F3F4FB"); app.style.setProperty("--fg","#12142B");
+  app.style.setProperty("--mut","#6B6F93"); app.style.setProperty("--ln","#E5E7F3");
+
+  const TABS = [["Sets","home"],["Cards","list"],["Exam","clock"]];
+  app.innerHTML =
+    statusBar("#12142B") +
+    `<div class="shellrow">
+       <nav class="side"><div class="side__brand"><span class="glyph">Q</span>Quizmetrix</div></nav>
+       <div class="main">
+         <div class="top"><span class="top__t" id="q-top"></span><span class="sp"></span>
+           <span class="who"><span class="av">M</span>Mj Despi</span></div>
+         <div class="scroll"><div class="pad" id="q-body"></div></div>
+       </div>
+     </div>
+     <nav class="tabbar"></nav>`;
+
+  const body = app.querySelector("#q-body"), bar = app.querySelector(".tabbar"), side = app.querySelector(".side");
+  TABS.forEach(([n,ic])=>{
+    const mk = () => { const b = el("button",null,`${ICONS[ic]}<span>${n}</span>`); b.onclick=()=>{
+      S.tab=n; if(n==="Exam"){ S.qi=0;S.picked=null;S.score=0;S.done=false;S.ans=[]; } draw(); }; return b; };
+    bar.appendChild(mk()); side.appendChild(mk());
+  });
+
+  function draw(){
+    [...bar.children].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    [...side.querySelectorAll("button")].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    app.querySelector("#q-top").textContent = S.tab==="Sets"?"Study sets":S.tab==="Cards"?"Flashcards":"Mock exam";
+    body.innerHTML = ""; body.classList.add("rise");
+    setTimeout(()=>body.classList.remove("rise"),380);
+
+    if(S.tab==="Sets"){
+      const k = el("div","grid g3");
+      [["Sets","6","3 shared"],["Mastered","82/140","59%"],["Exam avg","78%","last 4"]]
+        .forEach(([l,v,s])=>k.appendChild(el("div","card card--sunk",
+          `<div class="eyeb">${l}</div><div class="ttl" style="margin-top:5px">${v}</div><div class="sub" style="font-size:11px">${s}</div>`)));
+      body.appendChild(k);
+
+      const c = el("div","card");
+      c.appendChild(el("div","hd","<h4>Your sets</h4>"));
+      [["Data Structures",40,92,"Exam 08 Oct"],["Database Systems",35,71,"Exam 15 Oct"],
+       ["Software Engineering",28,54,"Quiz Friday"],["Networking",37,33,"Not scheduled"]]
+      .forEach(([n,cards,pct,when])=>{
+        const r = el("div","row");
+        r.innerHTML =
+          `<div class="row__m"><div class="row__t">${esc(n)}</div>
+             <div class="row__s">${cards} cards · ${esc(when)}</div>
+             <div class="meter" style="margin-top:7px"><i style="width:${pct}%"></i></div></div>
+           <span class="pill ${pct>80?"pill--ok":pct>50?"pill--warn":"pill--bad"}">${pct}%</span>`;
+        const b = el("button","btn btn--q btn--sm","Study");
+        b.onclick = () => { S.tab="Cards"; S.card=0; S.flip=false; draw(); };
+        r.appendChild(b); c.appendChild(r);
+      });
+      body.appendChild(c);
+
+      const ai = el("div","card"); ai.style.borderColor = "var(--a)";
+      ai.innerHTML = `<h4 style="margin:0 0 6px;font-size:13.5px">AI study assist</h4>
+        <p class="sub">Paste lecture notes and Quizmetrix drafts cards and exam questions from them.</p>`;
+      const gen = el("button","btn btn--sm btn--wide","Generate 10 cards from notes");
+      gen.style.marginTop = "12px";
+      gen.onclick = () => {
+        gen.disabled = true; gen.textContent = "Reading notes…";
+        setTimeout(()=>{ toast(root,"10 cards drafted — review before saving");
+          gen.disabled=false; gen.textContent="Generate 10 cards from notes"; },1200);
+      };
+      ai.appendChild(gen); body.appendChild(ai);
+    }
+
+    if(S.tab==="Cards"){
+      const c = deck[S.card];
+      const st = el("div","card");
+      st.style.cssText = "display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center;padding:34px 20px";
+      st.innerHTML =
+        `<div class="eyeb">Data Structures · ${S.card+1} of ${deck.length}</div>
+         <div style="font-size:${S.flip?"15px":"20px"};font-weight:${S.flip?"400":"700"};max-width:40ch;
+              line-height:1.4;letter-spacing:-.02em;color:${S.flip?"var(--mut)":"var(--fg)"}">${esc(S.flip?c.b:c.f)}</div>`;
+      const f = el("button","btn",S.flip?"Show question":"Reveal answer");
+      f.onclick = () => { S.flip=!S.flip; draw(); };
+      st.appendChild(f); body.appendChild(st);
+
+      const nav = el("div","grid g3");
+      const mk=(l,fn,q)=>{const b=el("button","btn btn--sm"+(q?" btn--q":""),l); b.onclick=fn; return b;};
+      nav.append(
+        mk("← Back",()=>{S.card=(S.card-1+deck.length)%deck.length;S.flip=false;draw();},true),
+        mk("Got it",()=>{toast(root,"Marked as mastered");S.card=(S.card+1)%deck.length;S.flip=false;draw();}),
+        mk("Again",()=>{toast(root,"Moved to the review pile");S.card=(S.card+1)%deck.length;S.flip=false;draw();},true));
+      body.appendChild(nav);
+    }
+
+    if(S.tab==="Exam"){
+      if(S.done){
+        const pct = Math.round(S.score/quiz.length*100);
+        const res = el("div","card");
+        res.style.cssText = "text-align:center;padding:30px 20px";
+        res.innerHTML =
+          `<div class="eyeb">Mock exam complete</div>
+           <div style="font-size:46px;font-weight:700;letter-spacing:-.04em;margin:8px 0;color:var(--a)">${pct}%</div>
+           <div class="sub">${S.score} of ${quiz.length} correct · ${pct>=80?"Ready for the real thing":"Worth another pass"}</div>`;
+        const again = el("button","btn btn--sm","Retake exam"); again.style.marginTop="14px";
+        again.onclick = () => { S.qi=0;S.score=0;S.picked=null;S.done=false;S.ans=[];draw(); };
+        res.appendChild(again); body.appendChild(res);
+
+        const rev = el("div","card");
+        rev.appendChild(el("div","hd","<h4>Answer review</h4>"));
+        quiz.forEach((q,i)=>{
+          const ok = S.ans[i]===q.a;
+          rev.appendChild(el("div","row",
+            `<div class="row__m"><div class="row__t" style="white-space:normal">${esc(q.q)}</div>
+               <div class="row__s">${ok?"Correct":"You chose “"+esc(q.o[S.ans[i]])+"” · answer: "+esc(q.o[q.a])}</div></div>
+             <span class="pill ${ok?"pill--ok":"pill--bad"}">${ok?"✓":"✗"}</span>`));
+        });
+        body.appendChild(rev);
+        return;
+      }
+      const q = quiz[S.qi];
+      body.appendChild(el("div","",
+        `<div class="hd"><span class="eyeb">Question ${S.qi+1} of ${quiz.length}</span><span class="pill">Timed · 20:00</span></div>
+         <div class="meter"><i style="width:${S.qi/quiz.length*100}%"></i></div>`));
+
+      const c = el("div","card");
+      c.appendChild(el("div","",`<div style="font-size:16px;font-weight:700;line-height:1.35;letter-spacing:-.02em;margin-bottom:14px">${esc(q.q)}</div>`));
+      q.o.forEach((o,i)=>{
+        const b = el("button",null,esc(o));
+        const chosen = S.picked===i, reveal = S.picked!=null, right = i===q.a;
+        b.style.cssText =
+          "display:block;width:100%;text-align:left;padding:13px 15px;margin-bottom:8px;border-radius:12px;font-size:13.5px;font-weight:500;transition:.18s;"+
+          "border:1px solid "+(reveal&&right?"var(--ok)":chosen?"var(--bad)":"var(--ln)")+";"+
+          "background:"+(reveal&&right?"rgba(23,135,90,.1)":chosen?"rgba(180,53,42,.09)":"transparent")+";"+
+          (reveal?"cursor:default":"");
+        b.onclick = () => { if(S.picked!=null) return; S.picked=i; S.ans[S.qi]=i; if(i===q.a) S.score++; draw(); };
+        c.appendChild(b);
+      });
+      if(S.picked!=null){
+        const n = el("button","btn btn--wide",S.qi===quiz.length-1?"See results":"Next question");
+        n.onclick = () => { if(S.qi===quiz.length-1) S.done=true; else { S.qi++; S.picked=null; } draw(); };
+        c.appendChild(n);
+      }
+      body.appendChild(c);
+    }
+  }
+  draw();
+  root.appendChild(app);
+}
+
+/* ============================================================
+   3 · UNISHOP
+   ============================================================ */
+function demoShop(root, mode){
+  const items = [
+    { id:1, n:"PE Uniform Set",    p:850, sizes:{S:12,M:8,L:0,XL:5},   c:"#3F6FB5" },
+    { id:2, n:"Polo · Crest", p:620, sizes:{S:4,M:15,L:9,XL:2},   c:"#EFEDE6" },
+    { id:3, n:"Slacks · Charcoal", p:740, sizes:{S:0,M:6,L:11,XL:7}, c:"#383B42" },
+    { id:4, n:"Blouse · Pleated",  p:680, sizes:{S:9,M:12,L:3,XL:0}, c:"#E9DECB" },
+    { id:5, n:"Necktie · Maroon",  p:250, sizes:{S:20,M:20,L:20,XL:20}, c:"#7E2B36" },
+  ];
+  const S = { tab:"Shop", sel:null, size:null, cart:[], placed:null };
+
+  const app = el("div","app " + (mode==="phone"?"narrow":"wide"));
+  app.style.setProperty("--a","#7E2B36");
+  app.style.setProperty("--a-soft","rgba(126,43,54,.11)");
+  app.style.setProperty("--bg","#FCFAFA"); app.style.setProperty("--surf","#FFFFFF");
+  app.style.setProperty("--sunk","#F6F1F2"); app.style.setProperty("--fg","#1A1316");
+  app.style.setProperty("--mut","#7C6E72"); app.style.setProperty("--ln","#EBE3E4");
+
+  const TABS = [["Shop","home"],["Cart","receipt"]];
+  app.innerHTML =
+    statusBar("#1A1316") +
+    `<div class="shellrow">
+       <nav class="side"><div class="side__brand"><span class="glyph">U</span>UniShop</div></nav>
+       <div class="main">
+         <div class="top"><span class="top__t" id="s-top"></span><span class="sp"></span>
+           <span class="who"><span class="av">M</span>Student</span></div>
+         <div class="scroll"><div class="pad" id="s-body"></div></div>
+       </div>
+     </div>
+     <nav class="tabbar"></nav>`;
+
+  const body = app.querySelector("#s-body"), bar = app.querySelector(".tabbar"), side = app.querySelector(".side");
+  const qty = () => S.cart.reduce((s,c)=>s+c.q,0);
+  const total = () => S.cart.reduce((s,c)=>s+c.q*c.p,0);
+  TABS.forEach(([n,ic])=>{
+    const mk=()=>{const b=el("button",null,`${ICONS[ic]}<span>${n}</span>`); b.onclick=()=>{S.tab=n;S.sel=null;draw();}; return b;};
+    bar.appendChild(mk()); side.appendChild(mk());
+  });
+
+  function draw(){
+    [...bar.children].forEach((b,i)=>{
+      b.setAttribute("aria-current",String(TABS[i][0]===S.tab));
+      b.querySelector("span:last-child").textContent = TABS[i][0]==="Cart" && qty() ? `Cart (${qty()})` : TABS[i][0];
+    });
+    [...side.querySelectorAll("button")].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    app.querySelector("#s-top").textContent = S.tab==="Shop"?"School uniforms":"Pre-order";
+    body.innerHTML=""; body.classList.add("rise");
+    setTimeout(()=>body.classList.remove("rise"),380);
+
+    if(S.tab==="Shop" && S.sel==null){
+      body.appendChild(el("div","",`<div class="ttl">Available uniforms</div>
+        <p class="sub" style="margin-top:3px">Stock updates as the campus store receives deliveries.</p>`));
+      const g = el("div","grid" + (mode==="phone"?"":" g2"));
+      items.forEach(it=>{
+        const stock = Object.values(it.sizes).reduce((a,b)=>a+b,0);
+        const b = el("button","card");
+        b.style.cssText = "display:flex;align-items:center;gap:13px;text-align:left;cursor:pointer;padding:13px";
+        b.innerHTML =
+          `<span style="width:52px;height:52px;border-radius:12px;background:${it.c};border:1px solid var(--ln);flex:none"></span>
+           <div class="row__m"><div class="row__t">${esc(it.n)}</div>
+             <div class="row__s">${peso(it.p)} · ${stock} in stock</div></div>
+           <span class="pill ${stock>20?"pill--ok":stock>0?"pill--warn":"pill--bad"}">${stock>0?"available":"out"}</span>`;
+        b.onclick = () => { S.sel=it.id; S.size=null; draw(); };
+        g.appendChild(b);
+      });
+      body.appendChild(g);
+    }
+
+    if(S.tab==="Shop" && S.sel!=null){
+      const it = items.find(i=>i.id===S.sel);
+      const back = el("button","btn btn--q btn--sm","← All uniforms");
+      back.style.alignSelf="flex-start"; back.onclick=()=>{S.sel=null;draw();};
+      body.appendChild(back);
+
+      const hero = el("div","");
+      hero.style.cssText = `height:${mode==="phone"?"188px":"230px"};border-radius:16px;background:${it.c};border:1px solid var(--ln)`;
+      body.appendChild(hero);
+      body.appendChild(el("div","",
+        `<div class="ttl">${esc(it.n)}</div>
+         <div style="font-size:19px;font-weight:700;color:var(--a);margin-top:4px;letter-spacing:-.02em">${peso(it.p)}</div>`));
+
+      body.appendChild(el("div","eyeb","Choose a size"));
+      const sizes = el("div",""); sizes.style.cssText="display:flex;gap:8px;flex-wrap:wrap";
+      Object.entries(it.sizes).forEach(([sz,n])=>{
+        const b = el("button",null,`${sz}<span style="display:block;font-size:10px;opacity:.72;font-weight:400;margin-top:2px">${n?n+" left":"none"}</span>`);
+        const on = S.size===sz;
+        b.disabled = n===0;
+        b.style.cssText =
+          "flex:1;min-width:70px;padding:11px 8px;border-radius:12px;text-align:center;font-size:13.5px;font-weight:700;transition:.18s;"+
+          "border:1px solid "+(on?"var(--a)":"var(--ln)")+";background:"+(on?"var(--a)":"transparent")+";color:"+(on?"#fff":"var(--fg)")+";"+
+          (n===0?"opacity:.34;cursor:not-allowed":"");
+        b.onclick = () => { S.size=sz; draw(); };
+        sizes.appendChild(b);
+      });
+      body.appendChild(sizes);
+
+      const add = el("button","btn btn--wide",S.size?`Pre-order size ${S.size}`:"Select a size first");
+      add.disabled = !S.size;
+      add.onclick = () => {
+        const line = S.cart.find(c=>c.id===it.id && c.sz===S.size);
+        if(line) line.q++; else S.cart.push({ id:it.id, n:it.n, sz:S.size, p:it.p, q:1 });
+        it.sizes[S.size]--;
+        toast(root,`${it.n} (${S.size}) added to pre-order`);
+        S.sel=null; draw();
+      };
+      body.appendChild(add);
+    }
+
+    if(S.tab==="Cart"){
+      if(S.placed){
+        const c = el("div","card"); c.style.cssText="text-align:center;padding:32px 20px";
+        c.innerHTML =
+          `<div style="font-size:38px;color:var(--ok)">✓</div>
+           <div class="ttl" style="margin-top:8px">Pre-order placed</div>
+           <p class="sub" style="margin-top:8px">Reference <b>${esc(S.placed)}</b><br>Pick up at the campus store once you get the SMS.</p>`;
+        const a = el("button","btn btn--q btn--sm","Back to shop"); a.style.marginTop="16px";
+        a.onclick=()=>{S.placed=null;S.tab="Shop";draw();};
+        c.appendChild(a); body.appendChild(c); return;
+      }
+      if(!S.cart.length){ body.appendChild(el("div","empty","Nothing pre-ordered yet.<br>Pick a uniform from the Shop tab.")); return; }
+      const c = el("div","card");
+      S.cart.forEach(line=>{
+        const r = el("div","row");
+        r.innerHTML =
+          `<div class="row__m"><div class="row__t">${esc(line.n)}</div>
+             <div class="row__s">Size ${esc(line.sz)} · ${line.q} × ${peso(line.p)}</div></div>
+           <span class="amt">${peso(line.q*line.p)}</span>`;
+        const rm = el("button","btn btn--q btn--sm","Remove");
+        rm.onclick = () => {
+          const it = items.find(i=>i.id===line.id);
+          it.sizes[line.sz] += line.q;
+          S.cart = S.cart.filter(x=>x!==line); draw();
+        };
+        r.appendChild(rm); c.appendChild(r);
+      });
+      c.appendChild(el("div","row",
+        `<div class="row__m"><div class="row__t">Total</div></div><span class="amt" style="font-size:17px">${peso(total())}</span>`));
+      body.appendChild(c);
+      const go = el("button","btn btn--wide","Place pre-order");
+      go.onclick = () => { S.placed = "US-"+String(4820+S.cart.length).padStart(4,"0"); S.cart=[]; toast(root,"Pre-order confirmed"); draw(); };
+      body.appendChild(go);
+    }
+  }
+  draw();
+  root.appendChild(app);
+}
+
+/* ============================================================
+   4 · CHRONOSYNC
+   ============================================================ */
+function demoChrono(root, mode){
+  const rooms = ["Lab 301","Lecture 204","Conference A"];
+  const days = ["Mon","Tue","Wed","Thu","Fri"];
+  const slots = ["08:00","09:30","11:00","13:00","14:30","16:00"];
+  const booked = {
+    "Lab 301":{ "Mon|08:00":"CS 101 Lecture","Mon|11:00":"Thesis Defense","Wed|09:30":"CS 101 Lecture","Thu|14:30":"Robotics Club","Fri|08:00":"Maintenance" },
+    "Lecture 204":{ "Tue|09:30":"Ethics 200","Wed|13:00":"Faculty Meeting","Fri|11:00":"Ethics 200" },
+    "Conference A":{ "Mon|13:00":"Dean's Briefing","Thu|08:00":"Accreditation Visit" },
+  };
+  const S = { room:rooms[0], pick:null };
+
+  const app = el("div","app " + (mode==="phone"?"narrow":"wide"));
+  app.style.setProperty("--a","#1C6E85");
+  app.style.setProperty("--a-soft","rgba(28,110,133,.12)");
+  app.style.setProperty("--bg","#FAFCFC"); app.style.setProperty("--surf","#FFFFFF");
+  app.style.setProperty("--sunk","#F0F5F6"); app.style.setProperty("--fg","#0C1A1F");
+  app.style.setProperty("--mut","#5F757D"); app.style.setProperty("--ln","#E1E9EB");
+
+  app.innerHTML =
+    statusBar("#0C1A1F") +
+    `<div class="shellrow">
+       <nav class="side"><div class="side__brand"><span class="glyph">C</span>ChronoSync</div></nav>
+       <div class="main">
+         <div class="top"><span class="top__t">Room scheduling</span><span class="sp"></span>
+           <span class="who"><span class="av">M</span>Mj Despi</span></div>
+         <div class="scroll"><div class="pad" id="c-body"></div></div>
+       </div>
+     </div>
+     <nav class="tabbar"></nav>`;
+
+  const body = app.querySelector("#c-body"), bar = app.querySelector(".tabbar"), side = app.querySelector(".side");
+  rooms.forEach(r=>{
+    const mk=()=>{const b=el("button",null,`${ICONS.home}<span>${r.split(" ")[0]}</span>`); b.onclick=()=>{S.room=r;S.pick=null;draw();}; return b;};
+    bar.appendChild(mk()); side.appendChild(mk());
+  });
+
+  function draw(){
+    [...bar.children].forEach((b,i)=>b.setAttribute("aria-current",String(rooms[i]===S.room)));
+    [...side.querySelectorAll("button")].forEach((b,i)=>b.setAttribute("aria-current",String(rooms[i]===S.room)));
+    body.innerHTML=""; body.classList.add("rise");
+    setTimeout(()=>body.classList.remove("rise"),380);
+
+    const B = booked[S.room];
+    const used = Object.keys(B).length, cap = days.length*slots.length;
+
+    const k = el("div","grid g3");
+    [["Room",S.room,"Capacity 40"],["Booked",used+" / "+cap,Math.round(used/cap*100)+"% used"],["Open",(cap-used)+"","this week"]]
+      .forEach(([l,v,s])=>k.appendChild(el("div","card card--sunk",
+        `<div class="eyeb">${l}</div><div class="ttl" style="font-size:15px;margin-top:5px">${esc(v)}</div><div class="sub" style="font-size:11px">${esc(s)}</div>`)));
+    body.appendChild(k);
+
+    const c = el("div","card");
+    c.appendChild(el("div","hd",`<h4>Week of 29 Sep 2026</h4><span class="pill">Tap a free slot</span>`));
+    const sc = el("div",""); sc.style.cssText = "overflow-x:auto;margin:0 -4px;padding:0 4px";
+    const t = el("div","");
+    t.style.cssText = `display:grid;grid-template-columns:54px repeat(${days.length},minmax(84px,1fr));gap:5px;min-width:${mode==="phone"?"500px":"auto"}`;
+    t.appendChild(el("div",""));
+    days.forEach(d=>{ const h=el("div","eyeb",d); h.style.cssText="text-align:center;padding-bottom:3px"; t.appendChild(h); });
+    slots.forEach(time=>{
+      const lab = el("div","");
+      lab.style.cssText="font-family:var(--mono);font-size:10px;color:var(--mut);display:flex;align-items:center;font-variant-numeric:tabular-nums";
+      lab.textContent = time;
+      t.appendChild(lab);
+      days.forEach(d=>{
+        const key = d+"|"+time, who = B[key], on = S.pick===key;
+        const cell = el("button",null, who?esc(who):on?"selected":"free");
+        cell.style.cssText =
+          "min-height:46px;border-radius:10px;padding:6px 7px;font-size:10.5px;line-height:1.3;text-align:left;transition:.18s;font-weight:"+(who?"600":"400")+";"+
+          "border:1px solid "+(on?"var(--a)":who?"transparent":"var(--ln)")+";"+
+          "background:"+(who?"var(--a-soft)":on?"var(--a)":"transparent")+";"+
+          "color:"+(on?"#fff":who?"var(--a)":"var(--mut)")+";"+(who?"cursor:not-allowed":"");
+        cell.onclick = () => {
+          if(who){ toast(root,"Conflict — "+who+" holds "+d+" "+time); return; }
+          S.pick = on?null:key; draw();
+        };
+        t.appendChild(cell);
+      });
+    });
+    sc.appendChild(t); c.appendChild(sc); body.appendChild(c);
+
+    const f = el("div","card");
+    f.appendChild(el("div","hd",`<h4>${S.pick?"Reserve "+S.room+" · "+S.pick.replace("|"," at "):"Reserve a slot"}</h4>`));
+    f.appendChild(el("div","fld",`<label for="cs-t">Purpose</label><input id="cs-t" placeholder="e.g. Capstone consultation">`));
+    const go = el("button","btn btn--wide",S.pick?"Confirm reservation":"Select a free slot above");
+    go.style.marginTop="13px"; go.disabled = !S.pick;
+    go.onclick = () => {
+      const v = f.querySelector("#cs-t").value.trim();
+      if(!v){ toast(root,"Add a purpose so the room log stays readable"); return; }
+      B[S.pick] = v;
+      toast(root,"Reserved · "+S.room+" "+S.pick.replace("|"," at "));
+      S.pick=null; draw();
+    };
+    f.appendChild(go); body.appendChild(f);
+  }
+  draw();
+  root.appendChild(app);
+}
+
+/* ============================================================
+   5 · DOCUFLOW AI
+   ============================================================ */
+function demoFlow(root, mode){
+  const nodes = [
+    { n:"Webhook",        s:"Document received",        d:420 },
+    { n:"OCR + Parse",    s:"Text layer extracted",     d:900 },
+    { n:"OpenAI Extract", s:"Fields pulled from text",  d:1200 },
+    { n:"Validate",       s:"Schema and totals checked",d:620 },
+    { n:"Categorise",     s:"Routed by document type",  d:500 },
+    { n:"Append to Sheet",s:"Row written",              d:560 },
+  ];
+  const docs = [
+    { f:"SI-88213.pdf", t:"Sales invoice",     fields:{ Vendor:"Northwind Supplies","Invoice no":"SI-88213",Date:"24 Sep 2026",Subtotal:"₱18,400.00",VAT:"₱2,208.00",Total:"₱20,608.00" } },
+    { f:"OR-00471.jpg", t:"Official receipt",  fields:{ Vendor:"Shell Ortigas","OR no":"00471",Date:"26 Sep 2026",Litres:"38.4",Total:"₱2,496.00" } },
+    { f:"PO-1190.pdf",  t:"Purchase order",    fields:{ Buyer:"Campus Facilities","PO no":"PO-1190",Date:"27 Sep 2026",Items:"14 lines",Total:"₱41,275.00" } },
+  ];
+  const S = { tab:"Pipeline", doc:0, stage:-1, running:false, log:[], out:[] };
+
+  const app = el("div","app " + (mode==="phone"?"narrow":"wide"));
+  app.style.setProperty("--a","#C2701F");
+  app.style.setProperty("--a-soft","rgba(194,112,31,.15)");
+  app.style.setProperty("--bg","#100E0C"); app.style.setProperty("--surf","#171412");
+  app.style.setProperty("--sunk","#1E1A17"); app.style.setProperty("--fg","#F3ECE4");
+  app.style.setProperty("--mut","#9B8D80"); app.style.setProperty("--ln","#2A2420");
+
+  const TABS = [["Pipeline","home"],["Output","list"]];
+  app.innerHTML =
+    statusBar("#F3ECE4") +
+    `<div class="shellrow">
+       <nav class="side"><div class="side__brand"><span class="glyph">◈</span>DocuFlow AI</div></nav>
+       <div class="main">
+         <div class="top"><span class="top__t" id="f-top"></span><span class="sp"></span>
+           <span class="who"><span class="av">M</span>Mj Despi</span></div>
+         <div class="scroll"><div class="pad" id="f-body"></div></div>
+       </div>
+     </div>
+     <nav class="tabbar"></nav>`;
+
+  const body = app.querySelector("#f-body"), bar = app.querySelector(".tabbar"), side = app.querySelector(".side");
+  TABS.forEach(([n,ic])=>{
+    const mk=()=>{const b=el("button",null,`${ICONS[ic]}<span>${n}</span>`); b.onclick=()=>{S.tab=n;draw();}; return b;};
+    bar.appendChild(mk()); side.appendChild(mk());
+  });
+
+  function run(){
+    if(S.running) return;
+    S.running = true; S.stage = -1; S.log = [];
+    draw();
+    let i = 0;
+    const step = () => {
+      if(i >= nodes.length){
+        S.running = false;
+        S.out.unshift({ ...docs[S.doc], at:"29 Sep 14:0"+(2+S.out.length) });
+        toast(root,docs[S.doc].f+" processed · row appended");
+        draw(); return;
+      }
+      S.stage = i;
+      S.log.push(nodes[i].n + " — " + nodes[i].s);
+      draw();
+      setTimeout(()=>{ i++; step(); }, nodes[i] ? nodes[i].d : 400);
+    };
+    step();
+  }
+
+  function draw(){
+    [...bar.children].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    [...side.querySelectorAll("button")].forEach((b,i)=>b.setAttribute("aria-current",String(TABS[i][0]===S.tab)));
+    app.querySelector("#f-top").textContent = S.tab==="Pipeline"?"invoice-intake":"Extracted output";
+    body.innerHTML="";
+
+    if(S.tab==="Output"){
+      if(!S.out.length){ body.appendChild(el("div","empty","No documents processed yet.<br>Run the pipeline on the Pipeline tab.")); return; }
+      S.out.forEach(o=>{
+        const c = el("div","card");
+        c.appendChild(el("div","hd",`<h4>${esc(o.f)}</h4><span class="pill pill--a">${esc(o.t)}</span>`));
+        Object.entries(o.fields).forEach(([k,v])=>{
+          c.appendChild(el("div","row",
+            `<div class="row__m"><div class="eyeb">${esc(k)}</div>
+               <div class="row__t" style="font-family:var(--mono);font-size:12.5px;margin-top:2px">${esc(v)}</div></div>`));
+        });
+        c.appendChild(el("div","sub",`Appended ${esc(o.at)} · sheet: extracted_documents`));
+        body.appendChild(c);
+      });
+      return;
+    }
+
+    const pick = el("div","card");
+    pick.appendChild(el("div","hd","<h4>Incoming document</h4>"));
+    const list = el("div",""); list.style.cssText="display:flex;gap:7px;flex-wrap:wrap";
+    docs.forEach((d,i)=>{
+      const on = S.doc===i;
+      const b = el("button",null,`${esc(d.f)}<span style="display:block;font-size:10px;opacity:.7;margin-top:2px">${esc(d.t)}</span>`);
+      b.style.cssText =
+        "padding:9px 13px;border-radius:11px;font-size:12px;font-weight:500;text-align:left;font-family:var(--mono);transition:.18s;"+
+        "border:1px solid "+(on?"var(--a)":"var(--ln)")+";background:"+(on?"var(--a-soft)":"transparent")+";color:"+(on?"#fff":"var(--mut)");
+      b.onclick = () => { if(!S.running){ S.doc=i; S.stage=-1; S.log=[]; draw(); } };
+      list.appendChild(b);
+    });
+    pick.appendChild(list);
+    const go = el("button","btn btn--wide",S.running?"Running…":"Execute workflow");
+    go.style.marginTop="13px"; go.disabled = S.running; go.onclick = run;
+    pick.appendChild(go);
+    body.appendChild(pick);
+
+    const flow = el("div","card");
+    flow.appendChild(el("div","hd",`<h4>Workflow</h4><span class="pill">n8n · 6 nodes</span>`));
+    nodes.forEach((n,i)=>{
+      const st = S.stage>i ? "done" : S.stage===i ? "run" : "idle";
+      flow.appendChild(el("div","row",
+        `<span style="width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;
+           background:${st==="done"?"var(--ok)":st==="run"?"var(--a)":"var(--sunk)"};
+           color:${st==="idle"?"var(--mut)":"#fff"}">${st==="done"?"✓":st==="run"?"●":i+1}</span>
+         <div class="row__m"><div class="row__t">${esc(n.n)}</div>
+           <div class="row__s">${st==="idle"?"Waiting":esc(n.s)}</div></div>
+         ${st==="run"?'<span class="pill pill--a">running</span>':st==="done"?'<span class="pill pill--ok">ok</span>':""}`));
+    });
+    const pct = S.stage<0 ? 0 : Math.round((S.stage + (S.running?0.5:1))/nodes.length*100);
+    flow.appendChild(el("div","meter",`<i style="width:${Math.min(pct,100)}%"></i>`));
+    body.appendChild(flow);
+
+    const log = el("div","card");
+    log.appendChild(el("div","hd","<h4>Execution log</h4>"));
+    const pre = el("div","");
+    pre.style.cssText="font-family:var(--mono);font-size:11px;line-height:1.85;color:var(--mut);white-space:pre-wrap";
+    pre.textContent = S.log.length
+      ? S.log.map((l,i)=>`[14:0${i}:${String(11+i*7).padStart(2,"0")}] ${l}`).join("\n")
+      : "Idle. Select a document and execute the workflow.";
+    log.appendChild(pre); body.appendChild(log);
+  }
+  draw();
+  root.appendChild(app);
+}
+
+/* ============================================================
+   registry
+   ============================================================ */
+const PROJECTS = [
+  { id:"money", name:"Manage My Money", kind:"Personal finance", best:"phone",
+    sub:"Track accounts, loans with real monthly interest, recurring bills and reimbursement claims with receipt extraction. Rebuilt from the live Laravel app.",
+    chips:["Laravel 12","Inertia","React","TypeScript","Tailwind","shadcn/ui","MySQL"],
+    url:"manage-my-money.test/dashboard",
+    hint:"Switch accounts on the balance card, record a transaction, post a scheduled bill, or attach a receipt and extract it.",
+    render:demoMoney },
+  { id:"quiz", name:"Quizmetrix", kind:"Learning platform", best:"desktop",
+    sub:"Flashcards, timed mock exams and AI-drafted study cards for students revising a subject.",
+    chips:["HTML","CSS","JavaScript","PHP","MySQL","Bootstrap","AI Integration"],
+    url:"quizmetrix.app/study",
+    hint:"Take the mock exam end to end, or flip through the flashcard deck.",
+    render:demoQuiz },
+  { id:"shop", name:"UniShop", kind:"Campus commerce", best:"phone",
+    sub:"Browse school uniforms, check live size stock and pre-order for counter pickup.",
+    chips:["Android Studio","Java","XML","UI/UX"],
+    url:"unishop.app/catalog",
+    hint:"Pick a uniform, choose a size, then place the pre-order from the Cart tab.",
+    render:demoShop },
+  { id:"chrono", name:"ChronoSync", kind:"Room scheduling", best:"desktop",
+    sub:"Week-grid room booking with live conflict detection across rooms and time slots.",
+    chips:["HTML","CSS","JavaScript","UI/UX"],
+    url:"chronosync.app/rooms",
+    hint:"Tap a free cell to reserve it, or tap a booked one to see the conflict.",
+    render:demoChrono },
+  { id:"flow", name:"DocuFlow AI", kind:"Document automation", best:"desktop",
+    sub:"An n8n workflow that reads an uploaded document, extracts its fields with AI, validates them and files the result.",
+    chips:["n8n","OpenAI","Webhooks","Google Sheets","Hostinger"],
+    url:"docuflow.app/workflows/invoice-intake",
+    hint:"Choose a document and execute the workflow, then open the Output tab.",
+    render:demoFlow },
+];
+
+const SIZES = {
+  phone:   { w:440,  h:956, label:"iPhone 16 Pro Max · 440 × 956" },
+  desktop: { w:1280, h:820, label:"Desktop · 1280 × 820" },
+};
+
+/* ============================================================
+   shell wiring
+   ============================================================ */
+const rail   = document.getElementById("rail");
+const screen = document.getElementById("screen");
+const device = document.getElementById("device");
+const slot   = document.getElementById("chrome-slot");
+const fit    = document.getElementById("fit");
+const deck   = document.querySelector(".deck");
+const dims   = document.getElementById("dims");
+const bPhone = document.getElementById("to-phone");
+const bDesk  = document.getElementById("to-desk");
+
+let current = 0;
+let mode = "phone";
+
+rail.appendChild(el("span","rail__l","Prototypes"));
+const picks = PROJECTS.map((p,i)=>{
+  const b = el("button","pick");
+  b.setAttribute("role","tab");
+  b.innerHTML =
+    `<span class="pick__n">${String(i+1).padStart(2,"0")}</span>
+     <span><span class="pick__name">${esc(p.name)}</span><span class="pick__kind">${esc(p.kind)}</span></span>`;
+  b.onclick = () => show(i);
+  rail.appendChild(b);
+  return b;
+});
+
+/* Scale the frame to whatever room the stage has. The prototypes are laid
+   out at true logical sizes, so the frame is shrunk as a whole rather than
+   reflowed — the phone build stays a phone build at any window width. */
+function fitFrame(){
+  const size = SIZES[mode];
+  const chromeH = mode === "phone" ? 24 : 43;   // bezel padding / browser bar
+  const frameW  = mode === "phone" ? size.w + 24 : size.w;
+  const frameH  = size.h + chromeH;
+  const availW  = deck.clientWidth;
+  const availH  = Math.max(430, innerHeight - 232);
+  const s = Math.min(1, availW / frameW, availH / frameH);
+  fit.style.transform = s < 1 ? `scale(${s.toFixed(4)})` : "";
+  deck.style.height = (frameH * s) + "px";
+}
+
+function setMode(next, redraw){
+  mode = next;
+  bPhone.setAttribute("aria-pressed", String(mode === "phone"));
+  bDesk .setAttribute("aria-pressed", String(mode === "desktop"));
+  const size = SIZES[mode];
+  device.className = mode === "phone" ? "dev--phone" : "dev--desktop";
+  slot.innerHTML = mode === "phone"
+    ? `<span class="island"></span><span class="indicator"></span><span class="btn-pwr"></span>`
+    : `<div class="chrome"><i></i><i></i><i></i><span>${esc(PROJECTS[current].url)}</span></div>`;
+  dims.innerHTML = `<b>${esc(size.label)}</b><span>rendered at true size, scaled to fit</span>`;
+  if (redraw !== false) paint();
+  fitFrame();
+}
+
+function paint(){
+  const p = PROJECTS[current];
+  screen.innerHTML = "";
+  p.render(screen, mode);
+}
+
+function show(i){
+  current = i;
+  const p = PROJECTS[i];
+  picks.forEach((b,j)=>b.setAttribute("aria-selected",String(j===i)));
+  document.getElementById("p-name").textContent = p.name;
+  document.getElementById("p-sub").textContent  = p.sub;
+  document.getElementById("p-chips").innerHTML =
+    `<span class="chip chip--live">interactive</span>` + p.chips.map(c=>`<span class="chip">${esc(c)}</span>`).join("");
+  document.getElementById("hint").innerHTML =
+    `<kbd>↑</kbd><kbd>↓</kbd> switch project · ${esc(p.hint)}`;
+  setMode(p.best, false);
+  paint();
+  fitFrame();
+  try{ localStorage.setItem("reel:last", p.id); }catch(e){}
+  if(location.hash.slice(1) !== p.id) history.replaceState(null,"","#"+p.id);
+}
+
+bPhone.onclick = () => setMode("phone");
+bDesk .onclick = () => setMode("desktop");
+
+addEventListener("resize", fitFrame, { passive:true });
+
+/* The portfolio links straight to demos.html#money and friends. Landing on a
+   hash that the page is already showing is a same-document navigation, so the
+   boot code never re-runs — without this the link, and the back button, do
+   nothing once the page is open. */
+addEventListener("hashchange", () => {
+  const i = PROJECTS.findIndex(p => p.id === location.hash.slice(1));
+  if (i >= 0 && i !== current) show(i);
+});
+
+document.addEventListener("keydown", e => {
+  if(e.target.matches("input,select,textarea")) return;
+  if(e.key === "ArrowDown"){ e.preventDefault(); show((current+1)%PROJECTS.length); }
+  if(e.key === "ArrowUp"){   e.preventDefault(); show((current-1+PROJECTS.length)%PROJECTS.length); }
+});
+
+let start = 0;
+const fromHash = PROJECTS.findIndex(p => p.id === location.hash.slice(1));
+if(fromHash >= 0) start = fromHash;
+else { try{ const s = PROJECTS.findIndex(p => p.id === localStorage.getItem("reel:last")); if(s >= 0) start = s; }catch(e){} }
+show(start);
+</script>
+</body>
+</html>
