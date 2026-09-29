@@ -292,6 +292,59 @@ body.rail .track{
   padding-left:var(--gut);padding-right:0;will-change:transform;
 }
 
+/* sneak peek — real screenshots of the prototype on the web and on a
+   phone, leaning into each other. The captures in shots/ hold only the app;
+   the browser bar and phone bezel are drawn here so they stay crisp.
+   The pair sits apart at rest and closes up on hover. */
+.peek{
+  position:relative;
+  /* Both children are absolutely positioned, so this box has no content to
+     size itself from. Inside the card's column flex it needs an explicit
+     width for aspect-ratio to resolve against, and flex:none so it is not
+     shrunk to nothing. */
+  width:100%;flex:none;
+  aspect-ratio:300/200;
+  margin:-2px -2px 4px;
+  -webkit-mask-image:linear-gradient(180deg,#000 88%,transparent);
+  mask-image:linear-gradient(180deg,#000 88%,transparent);
+}
+.peek__desk,.peek__phone{
+  position:absolute;
+  transition:transform .6s var(--ease);
+  will-change:transform;
+}
+.peek img{display:block;width:100%;height:auto}
+
+.peek__desk{
+  left:0;top:9%;width:71%;
+  border-radius:7px;overflow:hidden;
+  background:#fff;
+  box-shadow:0 20px 44px -18px rgba(0,0,0,.8),0 0 0 1px rgba(236,231,221,.14);
+  transform:rotate(-6deg);
+}
+.peek__bar{
+  display:flex;align-items:center;gap:4px;
+  padding:5px 7px;background:#E4E8E6;
+}
+.peek__bar i{width:4px;height:4px;border-radius:50%;background:rgba(0,0,0,.26)}
+
+.peek__phone{
+  right:1%;top:2%;width:27.5%;
+  border-radius:14px;padding:3px;
+  background:#0B0B0C;
+  box-shadow:0 22px 46px -16px rgba(0,0,0,.9),0 0 0 1px rgba(236,231,221,.16);
+  transform:rotate(8deg);
+}
+.peek__phone img{border-radius:11px}
+.peek__island{
+  position:absolute;top:7px;left:50%;
+  width:26%;height:4px;border-radius:99px;background:#0B0B0C;
+  transform:translateX(-50%);
+}
+
+.proj:hover .peek__desk {transform:rotate(-2.5deg) translate(-1%,-2%)}
+.proj:hover .peek__phone{transform:rotate(4deg)    translate(2%,-3%)}
+
 .proj{
   position:relative;background:var(--raise);border:1px solid var(--edge);
   border-radius:3px;padding:clamp(24px,3vw,38px);display:flex;flex-direction:column;gap:16px;
@@ -520,6 +573,7 @@ body.rail .railnote{display:block}
 </main>
 
 <script src="logos.js"></script>
+<script src="peek.js"></script>
 <script>
 /* ============================================================
    CONTENT — mirrors CONFIG in script.js
@@ -610,8 +664,10 @@ function render() {
       `<a class="plink" href="demos.html#${p.demo}"><i></i>Open live demo</a>`,
       p.repo ? `<a class="plink plink--q" href="${p.repo}" target="_blank" rel="noopener">Source</a>` : "",
     ].join("");
+    const peek = (typeof PEEK !== "undefined" && PEEK(p.demo)) || "";
     card.innerHTML =
-      `<span class="proj__n">${String(i+1).padStart(2,"0")} / ${p.s}</span>
+      `${peek}
+       <span class="proj__n">${String(i+1).padStart(2,"0")} / ${p.s}</span>
        <h3 class="proj__t">${p.t}</h3>
        <p class="proj__d">${p.d}</p>
        <div class="proj__k">${p.k.map(k=>`<span>${k}</span>`).join("")}</div>
