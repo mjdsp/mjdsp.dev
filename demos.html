@@ -500,7 +500,7 @@ function demoMoney(root, mode){
   const S = {
     tab:"Home", acc:0, sheet:false,
     accounts:[
-      { id:1, n:"BPI Savings",      k:"asset", bal:84210.55, tint:"#16855C", last:"7842" },
+      { id:1, n:"Maya",      k:"asset", bal:84210.55, tint:"#16855C", last:"7842" },
       { id:2, n:"GCash",            k:"asset", bal:6420.00,  tint:"#1F6FB5", last:"0224" },
       { id:3, n:"Cash on hand",     k:"asset", bal:3150.00,  tint:"#7A6A3E", last:"—" },
       { id:4, n:"Home Credit loan", k:"debt",  bal:-18400.00, tint:"#B4352A", rate:1.75, plan:12, since:"14 Mar 2026" },
@@ -783,7 +783,9 @@ function demoMoney(root, mode){
             s.done = true;
             S.tx.unshift({ d:"29 Sep", n:s.n, c:s.c, a:s.a, acc:1, g:"\u{1F4C6}" });
             S.accounts[0].bal += s.a;
-            toast(root,s.n+" posted to BPI Savings"); draw();
+            // name the account rather than hardcoding it, so renaming an
+            // account in the data above cannot leave this message stale
+            toast(root,s.n+" posted to "+S.accounts[0].n); draw();
           };
           skip.onclick = () => { s.done=true; toast(root,s.n+" skipped this cycle"); draw(); };
           g.append(post,skip); r.appendChild(g);
